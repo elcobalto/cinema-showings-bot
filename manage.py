@@ -3,7 +3,7 @@
 import os
 import sys
 
-from apps.cinehoyts.discord import *
+from apps.cinehoyts import discord as cinehoyts_discord
 
 
 def main():
@@ -18,6 +18,7 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
+    cinehoyts_discord.main()
 
 
 if __name__ == '__main__':
