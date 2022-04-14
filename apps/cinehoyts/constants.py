@@ -97,3 +97,12 @@ CINEMAS = {
     "santiago-sur": SANTIAGO_SUR,
     "sur-de-chile": SUR_DE_CHILE,
 }
+
+CINEMAS_ZONES = [
+    "norte-y-centro-de-chile",
+    "santiago-centro",
+    "santiago-oriente",
+    "santiago-norte-y-poniente",
+    "santiago-sur",
+    "sur-de-chile",
+]
