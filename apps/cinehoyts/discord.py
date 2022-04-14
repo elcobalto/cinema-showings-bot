@@ -3,7 +3,7 @@ import os
 
 from discord.ext import commands
 
-from apps.cinehoyts.services import get_info_cinemas, get_info_cities, get_showings
+from apps.cinehoyts.services import get_info_cinemas, get_info_cities, get_showings, get_movie_showing_by_date, get_movie_showing_by_cinema
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 
@@ -21,9 +21,25 @@ async def ping(ctx):
 
 
 @client.command()
-async def horarios_peliculas(ctx, city: str, date: str, movie: str):
-    cinema = get_showings(city, date, movie)
-    await ctx.send(cinema)
+async def horarios_cine(ctx, city: str, date: str, movie: str):
+    cinema_showings = get_showings(city, date, movie)
+    await ctx.send(cinema_showings)
+
+
+@client.command()
+async def horarios_pelicula(ctx, date: str, movie: str):
+    cinema_showings = get_movie_showing_by_date(date, movie)
+    for cinema_showing_part in cinema_showings.split("$SEPARATOR$"):
+        if cinema_showing_part:
+            await ctx.send(cinema_showing_part)
+
+
+@client.command()
+async def fechas_pelicula(ctx, cinema: str, movie: str):
+    cinema_showings = get_movie_showing_by_cinema(cinema, movie)
+    for cinema_showing_part in cinema_showings.split("$SEPARATOR$"):
+        if cinema_showing_part:
+            await ctx.send(cinema_showing_part)
 
 
 @client.command()
