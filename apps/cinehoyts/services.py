@@ -59,7 +59,7 @@ def get_show_by_date(
 
 def get_movie(movie_list: List[Dict[str, Any]], movie_title="batman"):
     for movie in movie_list:
-        if movie["Key"] == movie_title:
+        if movie_title in movie["Key"] or movie["Key"] in movie_title:
             return movie
     return {}
 
@@ -78,16 +78,16 @@ def get_showings(city: str, date: str, movie: str):
     showings_text = f"{movie_title} está en {city_name} el {showtime_date_name} a las\n"
     for formats in movie_showings["Formats"]:
         showtimes = formats["Showtimes"]
-        language = formats["Language"]
+        format = formats["Name"]
         for show in showtimes:
             showtime = show["Time"]
             showings.append(
                 {
-                    "language": language,
+                    "format": format,
                     "showtime": showtime,
                 }
             )
-            showings_text += f"{showtime}, formato {language}\n"
+            showings_text += f"{showtime} hrs, formato {format}\n"
     return showings_text
 
 
