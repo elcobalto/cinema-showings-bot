@@ -111,7 +111,7 @@ def get_movie_showing_by_date(date: str, movie: str):
             if not movie_showings:
                 return ''
             movie_title = movie_showings['Title']
-            total_showings = f'{movie_title}\n'
+            total_showings += f'{movie_title}\n'
             total_showings += get_showtimes(movie_showings)
             total_showings += '\n$SEPARATOR$\n\n'
         total_showings += '—————\n\n'
