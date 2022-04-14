@@ -1,8 +1,8 @@
-from apps.cinehoyts import discord as cinehoyts_discord
+from apps.cinehoyts import bot as cinehoyts_bot
 
 
 def main():
-    cinehoyts_discord.main()
+    cinehoyts_bot.main()
 
 
 if __name__ == '__main__':
