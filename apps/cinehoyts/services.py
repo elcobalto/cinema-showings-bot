@@ -74,7 +74,7 @@ def get_showtimes(movie_showings):
         format_name = formats["Name"]
         for show in showtimes:
             showtime = show["Time"]
-            showings_text += f"{showtime} hrs, formato {format_name}\n"
+            showings_text += f"{showtime} hrs — {format_name}\n"
     return showings_text
 
 
@@ -89,9 +89,7 @@ def get_showings(cinema: str, date: str, movie: str):
     showtime_movies = showtime_date["Movies"]
     movie_showings = get_movie_showings(showtime_movies, movie)
     movie_title = movie_showings["Title"]
-    showtime_result = (
-        f"{movie_title} está en {cinema_name} el {showtime_date_name} a las\n"
-    )
+    showtime_result = f"{movie_title} — {cinema_name} — {showtime_date_name}\n"
     showtime_result += get_showtimes(movie_showings)
     return showtime_result
 

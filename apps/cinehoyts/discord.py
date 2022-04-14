@@ -26,19 +26,19 @@ def main():
         await ctx.send("pong")
 
     @client.command()
-    async def horarios_cine(ctx, city: str, date: str, movie: str):
-        cinema_showings = get_showings(city, date, movie)
+    async def cine_fecha(ctx, cinema: str, date: str, movie: str):
+        cinema_showings = get_showings(cinema, date, movie)
         await ctx.send(cinema_showings)
 
     @client.command()
-    async def horarios_pelicula(ctx, date: str, movie: str):
+    async def peli_fecha(ctx, date: str, movie: str):
         cinema_showings = get_movie_showing_by_date(date, movie)
         for cinema_showing_part in cinema_showings.split("$SEPARATOR$"):
             if cinema_showing_part:
                 await ctx.send(cinema_showing_part)
 
     @client.command()
-    async def fechas_pelicula(ctx, cinema: str, movie: str):
+    async def fechas(ctx, cinema: str, movie: str):
         cinema_showings = get_movie_showing_by_cinema(cinema, movie)
         for cinema_showing_part in cinema_showings.split("$SEPARATOR$"):
             if cinema_showing_part:
