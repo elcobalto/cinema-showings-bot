@@ -44,16 +44,16 @@ def get_showings_by_zone(zone: str = "santiago-oriente") -> List[Dict[str, Any]]
         return []
 
 
-def get_cinema_by_cinema_key(cinemas: List[Dict[str, Any]], cinema_key: str) -> Dict[str, Any]:
+def get_cinema_by_cinema_key(
+    cinemas: List[Dict[str, Any]], cinema_key: str
+) -> Dict[str, Any]:
     for cinema in cinemas:
         if cinema["Key"] == cinema_key:
             return cinema
     return {}
 
 
-def get_showtimes_by_date(
-    cinemas: Dict[str, Any], date_name: str
-) -> Dict[str, Any]:
+def get_showtimes_by_date(cinemas: Dict[str, Any], date_name: str) -> Dict[str, Any]:
     for date in cinemas["Dates"]:
         if date["ShowtimeDate"] == date_name:
             return date
@@ -68,7 +68,7 @@ def get_movie_showings(movie_list: List[Dict[str, Any]], movie_title="batman"):
 
 
 def get_showtimes(movie_showings):
-    showings_text = ''
+    showings_text = ""
     for formats in movie_showings["Formats"]:
         showtimes = formats["Showtimes"]
         format_name = formats["Name"]
@@ -89,31 +89,33 @@ def get_showings(cinema: str, date: str, movie: str):
     showtime_movies = showtime_date["Movies"]
     movie_showings = get_movie_showings(showtime_movies, movie)
     movie_title = movie_showings["Title"]
-    showtime_result = f"{movie_title} está en {cinema_name} el {showtime_date_name} a las\n"
+    showtime_result = (
+        f"{movie_title} está en {cinema_name} el {showtime_date_name} a las\n"
+    )
     showtime_result += get_showtimes(movie_showings)
     return showtime_result
 
 
 def get_movie_showing_by_date(date: str, movie: str):
     date_formatted = date.replace("-", " ")
-    total_showings = f'En {date_formatted} se están exhibiendo\n\n'
+    total_showings = f"En {date_formatted} se están exhibiendo\n\n"
     for zone in CINEMAS.keys():
         zone_showings = get_showings_by_zone(zone)
         for cinema_key in CINEMAS[zone]:
             cinema = get_cinema_by_cinema_key(zone_showings, cinema_key)
             if not cinema:
                 continue
-            cinema_name = cinema['Name']
-            total_showings += f'{cinema_name}\n\n'
+            cinema_name = cinema["Name"]
+            total_showings += f"{cinema_name}\n\n"
             showtime_date = get_showtimes_by_date(cinema, date.replace("-", " "))
             showtime_movies = showtime_date["Movies"]
             movie_showings = get_movie_showings(showtime_movies, movie)
             if not movie_showings:
-                return ''
-            movie_title = movie_showings['Title']
-            total_showings += f'{movie_title}\n'
+                return ""
+            movie_title = movie_showings["Title"]
+            total_showings += f"{movie_title}\n"
             total_showings += get_showtimes(movie_showings)
-            total_showings += '—————\n\n$SEPARATOR$\n\n'
+            total_showings += "—————\n\n$SEPARATOR$\n\n"
     return total_showings
 
 
@@ -130,7 +132,7 @@ def get_movie_showing_by_cinema(cinema: str, movie: str):
         movie_title = movie_showings["Title"]
         showtime_result += f"{movie_title} — {showtime_date_name}\n"
         showtime_result += get_showtimes(movie_showings)
-        showtime_result += '—————\n\n$SEPARATOR$\n\n'
+        showtime_result += "—————\n\n$SEPARATOR$\n\n"
     return showtime_result
 
 
