@@ -187,3 +187,17 @@ def get_cinema_showings_by_date(cinema_name: str, date: str):
             showtime_result += _get_showtime_by_movieshowing(movie_showing)
             showtime_result += "—————\n\n$SEPARATOR$\n\n"
     return showtime_result
+
+
+def get_info_cities():
+    result = ""
+    for city in CINEMA_ZONES_TAGS:
+        result += f"{city}\n"
+    return result
+
+
+def get_info_cinemas():
+    result = ""
+    for cinema in CINEMAS_TAGS:
+        result += f"{cinema}\n"
+    return result

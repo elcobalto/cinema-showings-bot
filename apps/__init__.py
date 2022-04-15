@@ -59,9 +59,9 @@ def get_cinema_showings(cinema):
         return cinemark_services.get_cinema_showings(cinema)
 
 
-def get_info_cities(zone):
-    return cinehoyts_services.get_info_cities(zone)
+def get_info_cities():
+    return cinehoyts_services.get_info_cities() + cinemark_services.get_info_cities()
 
 
 def get_info_cinemas():
-    return cinehoyts_services.get_info_cinemas()
+    return cinehoyts_services.get_info_cinemas() + cinemark_services.get_info_cinemas()

@@ -207,9 +207,9 @@ def get_cinema_showings_by_date(cinema: str, date: str):
     return showtime_result
 
 
-def get_info_cities(zone):
+def get_info_cities():
     result = ""
-    for city in CINEMAS[zone]:
+    for city in CINEMAS.keys():
         result += f"{city}\n"
     return result
 
