@@ -98,7 +98,7 @@ CINEMAS = {
     "sur-de-chile": SUR_DE_CHILE,
 }
 
-CINEMAS_ZONES = [
+CINEMA_ZONES = [
     "norte-y-centro-de-chile",
     "santiago-centro",
     "santiago-oriente",

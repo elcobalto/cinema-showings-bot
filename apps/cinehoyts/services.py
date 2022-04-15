@@ -3,8 +3,8 @@ from typing import Any, Dict, List
 import requests
 
 from apps.cinehoyts.constants import (
+    CINEMA_ZONES,
     CINEMAS,
-    CINEMAS_ZONES,
     NORTE_Y_CENTRO_DE_CHILE,
     SANTIAGO_CENTRO,
     SANTIAGO_ORIENTE,
@@ -30,6 +30,11 @@ def _get_zone_by_cinema(cinema):
     elif cinema in SUR_DE_CHILE:
         return "sur-de-chile"
     return None
+
+
+def is_chain(cinema):
+    zone = _get_zone_by_cinema(cinema)
+    return zone is not None
 
 
 def _get_showings_response_by_zone(
@@ -131,7 +136,7 @@ def _get_formatted_showings_by_zone(movie: str, date: str, zone: str):
 
 def get_showings_by_zone(movie: str, date: str, zone: str):
     date_formatted = date.replace("-", " ")
-    total_showings = f"En {date_formatted} se están exhibiendo\n\n"
+    total_showings = f"El {date_formatted} se están exhibiendo\n\n"
     total_showings += _get_formatted_showings_by_zone(movie, date, zone)
     return total_showings
 
@@ -139,7 +144,7 @@ def get_showings_by_zone(movie: str, date: str, zone: str):
 def get_showing_by_date(movie: str, date: str):
     date_formatted = date.replace("-", " ")
     total_showings = f"En {date_formatted} se están exhibiendo\n\n"
-    for zone in CINEMAS_ZONES:
+    for zone in CINEMA_ZONES:
         total_showings += _get_formatted_showings_by_zone(movie, date, zone)
     return total_showings
 
@@ -202,9 +207,9 @@ def get_cinema_showings_by_date(cinema: str, date: str):
     return showtime_result
 
 
-def get_info_cities(zone):
+def get_info_cities():
     result = ""
-    for city in CINEMAS[zone]:
+    for city in CINEMAS.keys():
         result += f"{city}\n"
     return result
 
