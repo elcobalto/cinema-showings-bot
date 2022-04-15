@@ -74,7 +74,7 @@ def main():
     @client.command()
     async def info(ctx):
         info = "$c.horarios nombre-pelicula fecha nombre-cine(opcional)\nHORARIOS PELÍCULA PARA UNA FECHA EN PARTICULAR. EN UN CINE O TODOS LOS CINES. NOMBRE DEL CINE TAMBIÉN PUEDE SER UNA ZONA.\n\n"
-        info += "$c.horarios_cines nombre-pelicula nombre-cine\nHORARIOS PELÍCULA PARA UN CINE EN PARTICULAR.\n\n"
+        info += "$c.horarios_cine nombre-pelicula nombre-cine\nHORARIOS PELÍCULA PARA UN CINE EN PARTICULAR.\n\n"
         info += "$c.cine nombre-cine fecha(opcional)\nCARTELERA COMPLETA DE UN CINE. EN GENERAL O PARA UN DÍA EN PARTICULAR.\n\n"
         info += "$c.info_cities\nLISTA DE ZONAS INCLUIDAS.\n\n"
         info += "$c.info_cinemas\nLISTA DE CINES INCLUIDOS.\n\n"
