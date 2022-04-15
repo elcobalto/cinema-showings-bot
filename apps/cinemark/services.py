@@ -58,9 +58,14 @@ def _get_showings_response_by_zone(
 def _check_date(date, dateshow):
     listed_date = date.split("-")
     listed_dateshow = dateshow["date"].split("-")
+    month_date = listed_date[1]
+    try:
+        month = int(month_date)
+    except Exception:
+        month = month_to_number[month_date]
     return (
-        month_to_number[listed_date[1]] == listed_dateshow[1]
-        and listed_date[0] == listed_dateshow[2]
+        int(month) == int(listed_dateshow[1])
+        and int(listed_date[0]) == int(listed_dateshow[2])
     )
 
 
@@ -143,7 +148,7 @@ def get_showing_by_date(movie: str, date: str):
 def get_showing_by_cinema(movie: str, cinema_name: str, format: str = None):
     cinema = _get_cinema(cinema_name)
     dateshows = _get_showings_response_by_zone(cinema["id"])
-    showtime_result = f"{cinema}\n\n"
+    showtime_result = f"{cinema['name']}\n\n"
     for dateshow in dateshows:
         showtime_result += f"{movie.upper()} — {dateshow['date']}\n"
         showtime_result += _get_formatted_showings_by_cinema(movie, dateshow["movies"])
@@ -153,7 +158,7 @@ def get_showing_by_cinema(movie: str, cinema_name: str, format: str = None):
 
 def _get_showtime_by_movieshowing(movie_showing):
     movie_title = _format_movieshow_title(movie_showing["title"])
-    showtime_result = f"{movie_title.upper()}\n"
+    showtime_result = f"{movie_title.upper().replace('-', ' ')}\n"
     movie_formats = movie_showing["movie_versions"]
     for show_format in movie_formats:
         format = _format_show_format(show_format["title"])
@@ -168,9 +173,10 @@ def get_cinema_showings(cinema_name: str):
     dateshows = _get_showings_response_by_zone(cinema["id"])
     showtime_result = f'{cinema["name"]}\n\n'
     for dateshow in dateshows:
-        showtime_result += f'{dateshow["Date"]}\n\n'
+        showtime_result += f'{dateshow["date"]}\n\n'
         for movie_showing in dateshow["movies"]:
             showtime_result += _get_showtime_by_movieshowing(movie_showing)
+            showtime_result += '\n'
         showtime_result += "—————\n\n$SEPARATOR$\n\n"
     return showtime_result
 
