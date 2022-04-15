@@ -1,4 +1,4 @@
-from apps.cinehoyts import bot as cinehoyts_bot
+from apps import bot as cinehoyts_bot
 
 
 def main():
