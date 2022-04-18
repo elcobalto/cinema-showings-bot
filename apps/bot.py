@@ -11,13 +11,12 @@ from apps import (
     get_movie_date_message,
     get_showing_by_cinema,
 )
-from apps.constants import CINEMAS_ZONES
 
 
 def main():
     TOKEN = os.getenv("DISCORD_TOKEN")
 
-    client = commands.Bot(command_prefix="$test.")
+    client = commands.Bot(command_prefix="c.")
 
     @client.event
     async def on_ready():
