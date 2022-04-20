@@ -92,31 +92,29 @@ def get_movie_date_message(
         if not showdate:
             continue
         temp_result = f"{showdate.get_formatted_date()}\n\n"
-        is_there_any_movie = False
+        is_there_any_cinema = False
         for cinema in showdate.cinemas:
-            temp_result += f"{cinema.name}\n\n"
+            movie_temp_result = f"{cinema.name}\n\n"
+            is_there_any_movie = False
             for movie in cinema.movies:
-                temp_result += f"{movie.get_formatted_title()}\n"
+                show_temp_result = f"{movie.get_formatted_title()}\n"
+                is_there_showtime = False
                 for showtime in movie.showtimes:
+                    is_there_any_cinema = True
                     is_there_any_movie = True
-                    temp_result += f"{showtime.showtime} hrs — {showtime.format}\n"
+                    is_there_showtime = True
+                    show_temp_result += f"{showtime.showtime} hrs — {showtime.format}\n"
                     total_shotimes += 1
-                temp_result += "——————\n\n"
+                show_temp_result += "——————\n\n"
                 if separator_type == "MOVIE":
-                    temp_result += "\n\n$SEPARATOR$"
-                if is_there_any_movie:
-                    result += temp_result
-                    is_there_any_movie = False
-                else:
-                    temp_result = ""
+                    show_temp_result += "\n\n$SEPARATOR$"
+                if is_there_showtime:
+                    movie_temp_result += show_temp_result
             if separator_type == "CINEMA":
-                temp_result += "$SEPARATOR$"
+                movie_temp_result += "$SEPARATOR$"
             if is_there_any_movie:
-                result += temp_result
-                is_there_any_movie = False
-            else:
-                temp_result = ""
-        if is_there_any_movie:
+                temp_result += movie_temp_result
+        if is_there_any_cinema:
             result += temp_result
         if separator_type == "SHOWTIME":
             result += "\n\n$SEPARATOR$"

@@ -16,7 +16,7 @@ from apps import (
 def main():
     TOKEN = os.getenv("DISCORD_TOKEN")
 
-    client = commands.Bot(command_prefix="c.")
+    client = commands.Bot(command_prefix="$c.")
 
     @client.event
     async def on_ready():

@@ -206,8 +206,6 @@ def get_cinema_showings_by_date(cinema_name: str, date: str) -> ShowDate:
         if not is_date:
             continue
         movies += _get_movie_showtimes_for_movie_showings(dateshow)
-    if not movies:
-        return ShowDate()
     return ShowDate(
         date=dateshows[0]["date"], cinemas=[Cinema(name=cinema["name"], movies=movies)]
     )
