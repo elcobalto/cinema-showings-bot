@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.cinema.services import cinehoyts as cinehoyts_services
@@ -119,6 +119,29 @@ def get_movie_date_message(
         if separator_type == "SHOWTIME":
             result += "\n\n$SEPARATOR$"
     return result, total_shotimes
+
+
+def get_movie_total(cinemas: List[Cinema]) -> str:
+    total = {}
+    for cinema in cinemas:
+        for movie in cinema.movies:
+            movie_title = movie.title.upper().replace("-", " ").replace(":", "")
+            if movie_title in total:
+                total[movie_title] += len(movie.showtimes)
+            else:
+                total[movie_title] = len(movie.showtimes)
+    total = {k: v for k, v in sorted(total.items(), key=lambda item: item[1], reverse=True)}
+    message = ''
+    for movie_title in total.keys():
+        message += f'{movie_title}: {total[movie_title]}\n'
+    return message
+
+
+def get_total(date: str) -> str:
+    cinehoyts_total = cinehoyts_services.get_total(date)
+    cinemark_total = cinemark_services.get_total(date)
+    total = get_movie_total(cinehoyts_total + cinemark_total)
+    return total
 
 
 def get_info_cities():
