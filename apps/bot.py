@@ -10,6 +10,7 @@ from apps import (
     get_info_cities,
     get_movie_date_message,
     get_showing_by_cinema,
+    get_total,
 )
 
 
@@ -71,6 +72,11 @@ def main():
         await ctx.send(message)
 
     @client.command()
+    async def total(ctx, date):
+        message = get_total(date)
+        await ctx.send(message)
+
+    @client.command()
     async def info_cities(
         ctx,
     ):
@@ -87,6 +93,7 @@ def main():
         info = "$c.horarios nombre-pelicula fecha nombre-cine(opcional)\nHORARIOS PELÍCULA PARA UNA FECHA EN PARTICULAR. EN UN CINE O TODOS LOS CINES. NOMBRE DEL CINE TAMBIÉN PUEDE SER UNA ZONA.\n\n"
         info += "$c.horarios_cine nombre-pelicula nombre-cine\nHORARIOS PELÍCULA PARA UN CINE EN PARTICULAR.\n\n"
         info += "$c.cine nombre-cine fecha(opcional)\nCARTELERA COMPLETA DE UN CINE. EN GENERAL O PARA UN DÍA EN PARTICULAR.\n\n"
+        info += "$c.total fecha\nRECUENTO DE PELÍCULAS TOTALES POR FECHA.\n\n"
         info += "$c.info_cities\nLISTA DE ZONAS INCLUIDAS.\n\n"
         info += "$c.info_cinemas\nLISTA DE CINES INCLUIDOS.\n\n"
         await ctx.send(info)
