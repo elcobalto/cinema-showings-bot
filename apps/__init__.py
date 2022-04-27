@@ -1,4 +1,5 @@
-from typing import List, Optional, Tuple, Dict
+from difflib import SequenceMatcher
+from typing import Dict, List, Optional, Tuple
 
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.cinema.services import cinehoyts as cinehoyts_services
@@ -121,26 +122,45 @@ def get_movie_date_message(
     return result, total_shotimes
 
 
-def get_movie_total(cinemas: List[Cinema]) -> str:
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+
+def _check_movie_in_total(movie_title, total):
+    for possible_movie in total.keys():
+        similarity = similar(movie_title, possible_movie)
+        if (
+            (movie_title in possible_movie)
+            or (possible_movie in movie_title)
+            or similarity > 0.6
+        ):
+            return True, possible_movie
+    return False, movie_title
+
+
+def _get_movie_total(cinemas: List[Cinema]) -> str:
     total = {}
     for cinema in cinemas:
         for movie in cinema.movies:
             movie_title = movie.title.upper().replace("-", " ").replace(":", "")
-            if movie_title in total:
-                total[movie_title] += len(movie.showtimes)
+            movie_exists, movie_key = _check_movie_in_total(movie_title, total)
+            if movie_exists:
+                total[movie_key] += len(movie.showtimes)
             else:
-                total[movie_title] = len(movie.showtimes)
-    total = {k: v for k, v in sorted(total.items(), key=lambda item: item[1], reverse=True)}
-    message = ''
+                total[movie_key] = len(movie.showtimes)
+    total = {
+        k: v for k, v in sorted(total.items(), key=lambda item: item[1], reverse=True)
+    }
+    message = ""
     for movie_title in total.keys():
-        message += f'{movie_title}: {total[movie_title]}\n'
+        message += f"{movie_title}: {total[movie_title]}\n"
     return message
 
 
 def get_total(date: str) -> str:
     cinehoyts_total = cinehoyts_services.get_total(date)
     cinemark_total = cinemark_services.get_total(date)
-    total = get_movie_total(cinehoyts_total + cinemark_total)
+    total = _get_movie_total(cinehoyts_total + cinemark_total)
     return total
 
 
