@@ -64,7 +64,9 @@ def _get_cinema_by_cinema_key(
 
 def _get_showtimes_by_date(cinemas: Dict[str, Any], date_name: str) -> Dict[str, Any]:
     for date in cinemas["Dates"]:
-        if date["ShowtimeDate"].replace(" ", "-") == date_name:
+        formatted_showing_date = date["ShowtimeDate"].replace(" ", "-")
+        formatted_searched_date = date_name.replace(" ", "-")
+        if formatted_showing_date == formatted_searched_date:
             return date
     return {}
 
