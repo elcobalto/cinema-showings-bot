@@ -127,7 +127,9 @@ def _get_formatted_showings_by_cinema(
         return None
     movies = []
     for movie_showing in showtime_date["Movies"]:
-        if not movie or (movie in movie_showing["Key"] or movie_showing["Key"] in movie):
+        if not movie or (
+            movie in movie_showing["Key"] or movie_showing["Key"] in movie
+        ):
             movies.append(
                 Movie(
                     title=movie_showing["Title"],
