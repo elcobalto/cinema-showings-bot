@@ -12,12 +12,13 @@ from apps import (
     get_showing_by_cinema,
     get_total,
 )
+from cinema_showings_bot.settings import COMMAND
 
 
 def main():
     TOKEN = os.getenv("DISCORD_TOKEN")
 
-    client = commands.Bot(command_prefix="$c.")
+    client = commands.Bot(command_prefix=COMMAND)
 
     @client.event
     async def on_ready():
