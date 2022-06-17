@@ -16,17 +16,13 @@ from cinema_showings_bot.settings import COMMAND
 
 
 def main():
-    TOKEN = os.getenv("DISCORD_TOKEN")
+    TOKEN = os.getenv("DISCORD_TOKEN", "")
 
     client = commands.Bot(command_prefix=COMMAND)
 
     @client.event
     async def on_ready():
         print(f"{client.user} has connected to Discord!")
-
-    @client.command()
-    async def ping(ctx):
-        await ctx.send("pong")
 
     @client.command()
     async def horarios(ctx, movie: str, date: str, cinema: str = None):
@@ -99,4 +95,5 @@ def main():
         info += "$c.info_cinemas\nLISTA DE CINES INCLUIDOS.\n\n"
         await ctx.send(info)
 
-    client.run(TOKEN)
+    if TOKEN:
+        client.run(TOKEN)
