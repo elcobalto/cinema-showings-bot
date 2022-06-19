@@ -117,7 +117,7 @@ def get_showings(movie: str, date: str, cinema_name: str, format: str) -> ShowDa
     return ShowDate(date=date, cinemas=cinemas)
 
 
-def _get_cinemas_by_zone(zone: str) -> List[str]:
+def _get_cinemas_by_zone(zone: str) -> List[Dict[str, Any]]:
     for cinema_zone in CINEMA_ZONES:
         if cinema_zone["tag"] == zone:
             return cinema_zone["list"]
@@ -143,10 +143,9 @@ def _get_showings_by_cinema(
     return cinemas
 
 
-def get_showings_by_cinema_tags(movie: str, date: str, cinemas: List[str], format: str):
+def get_showings_by_cinema_tags(movie: str, date: str, cinemas: List[Dict[str, Any]], format: str):
     cinemas_showdates = []
-    for cinema_tag in cinemas:
-        cinema = _get_cinema(cinema_tag)
+    for cinema in cinemas:
         cinemas_showdates += _get_showings_by_cinema(date, cinema, movie, format)
     return cinemas_showdates
 
@@ -156,7 +155,7 @@ def get_showings_by_zone(movie: str, date: str, zone: str, format: str) -> List[
 
 
 def get_showing_by_date(movie: str, date: str, format: str) -> List[Cinema]:
-    return get_showings_by_cinema_tags(movie, date, CINEMAS_TAGS, format)
+    return get_showings_by_cinema_tags(movie, date, CINEMA_ZONES, format)
 
 
 def get_showing_by_cinema(

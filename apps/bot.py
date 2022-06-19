@@ -29,9 +29,9 @@ def main():
         movie = None if movie in ('skip', 'sk', 'sp') else movie
         date = None if date in ('skip', 'sk', 'sp') else date
         cinema = None if cinema in ('skip', 'sk', 'sp') else cinema
-        if date and cinema:
+        if not movie and date and cinema:
             message, total = get_general_cinema_showings(cinema, date, format)
-        elif movie and cinema:
+        elif movie and not date and cinema:
             message, total = get_movie_date_message(get_showing_by_cinema(movie, cinema, format), "CINEMA")
         else:
             message, total = get_general_showings(movie, date, cinema, format)

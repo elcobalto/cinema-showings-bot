@@ -93,6 +93,33 @@ SANTIAGO = {
         PORTAL_NUNOA,
     ],
 }
+SANTIAGO_CENTRO = {
+    "tag": "santiago-centro",
+    "list": [
+],
+}
+SANTIAGO_ORIENTE = {
+    "tag": "santiago-oriente",
+    "list": [
+        ALTO_LAS_CONDES,
+        PORTAL_NUNOA,
+    ],
+}
+SANTIAGO_NORTE_Y_PONIENTE = {
+    "tag": "santiago-norte-y-poniente",
+    "list": [
+        MALLPLAZA_NORTE,
+        MALLPLAZA_OESTE,
+        MID_MALL_MAIPU,
+    ],
+}
+SANTIAGO_SUR = {
+    "tag": "santiago-sur",
+    "list": [
+        MALLPLAZA_TOBALABA,
+        MALLPLAZA_VESPUCIO,
+    ],
+}
 
 OPEN_RANCAGUA = {"name": "Cinemark Open Rancagua", "tag": "open-rancagua", "id": 2303}
 MALL_RANCAGUA = {"name": "Cinemark Mall Rancagua", "tag": "mall-rancagua", "id": 517}
@@ -148,12 +175,17 @@ CINEMA_ZONES = [
     VINA_DEL_MAR,
     NORTE_Y_CENTRO_DE_CHILE,
     SANTIAGO,
+    SANTIAGO_CENTRO,
+    SANTIAGO_ORIENTE,
+    SANTIAGO_NORTE_Y_PONIENTE,
+    SANTIAGO_SUR,
     RANCAGUA,
     TALCAHUANO,
     CONCEPCION,
     CORONEL,
     GRAN_CONCEPCION,
     OSORNO,
+    SUR_DE_CHILE,
 ]
 
 CINEMAS_TAGS = [cinema["tag"] for city in CINEMA_ZONES for cinema in city["list"]]
