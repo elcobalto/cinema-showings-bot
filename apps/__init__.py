@@ -16,36 +16,36 @@ def get_chain(cinema: str) -> Optional[str]:
     return None
 
 
-def get_showings(movie, date, cinema) -> ShowDate:
+def get_showings(movie, date, cinema, format) -> ShowDate:
     chain = get_chain(cinema)
     if chain == "CINEHOYTS":
-        return cinehoyts_services.get_showings(movie, date, cinema)
+        return cinehoyts_services.get_showings(movie, date, cinema, format)
     elif chain == "CINEMARK":
-        return cinemark_services.get_showings(movie, date, cinema)
+        return cinemark_services.get_showings(movie, date, cinema, format)
 
 
-def get_showings_by_zone(movie, date, cinema) -> ShowDate:
-    cinehoyts_cinemas = cinehoyts_services.get_showings_by_zone(movie, date, cinema)
-    cinemark_cinemas = cinemark_services.get_showings_by_zone(movie, date, cinema)
+def get_showings_by_zone(movie, date, cinema, format) -> ShowDate:
+    cinehoyts_cinemas = cinehoyts_services.get_showings_by_zone(movie, date, cinema, format)
+    cinemark_cinemas = cinemark_services.get_showings_by_zone(movie, date, cinema, format)
     return ShowDate(date=date, cinemas=cinehoyts_cinemas + cinemark_cinemas)
 
 
-def get_showing_by_date(movie, date) -> ShowDate:
-    cinehoyts_cinemas = cinehoyts_services.get_showing_by_date(movie, date)
-    cinemark_cinemas = cinemark_services.get_showing_by_date(movie, date)
+def get_showing_by_date(movie, date, format) -> ShowDate:
+    cinehoyts_cinemas = cinehoyts_services.get_showing_by_date(movie, date, format)
+    cinemark_cinemas = cinemark_services.get_showing_by_date(movie, date, format)
     return ShowDate(date=date, cinemas=cinehoyts_cinemas + cinemark_cinemas)
 
 
-def get_general_showings(movie: str, date: str, cinema: str = None) -> Tuple[str, int]:
+def get_general_showings(movie: str, date: str, cinema: str = None, format: str = None) -> Tuple[str, int]:
     cinema_is_zone = cinema in CINEMAS_ZONES
     if cinema and not cinema_is_zone:
-        cinema_showings = get_showings(movie, date, cinema)
+        cinema_showings = get_showings(movie, date, cinema, format)
         message, total = get_movie_date_message([cinema_showings], "CINEMA")
     elif cinema and cinema_is_zone:
-        cinema_showings = get_showings_by_zone(movie, date, cinema)
+        cinema_showings = get_showings_by_zone(movie, date, cinema, format)
         message, total = get_movie_date_message([cinema_showings], "CINEMA")
     else:
-        cinema_showings = get_showing_by_date(movie, date)
+        cinema_showings = get_showing_by_date(movie, date, format)
         message, total = get_movie_date_message([cinema_showings], "CINEMA")
     return message, total
 
@@ -56,30 +56,34 @@ def get_showing_by_cinema(movie, cinema, format) -> List[ShowDate]:
         return cinehoyts_services.get_showing_by_cinema(movie, cinema, format)
     elif chain == "CINEMARK":
         return cinemark_services.get_showing_by_cinema(movie, cinema, format)
+    else:
+        cinehoyts_showings = cinehoyts_services.get_showing_by_cinema(movie, cinema, format)
+        cinemark_showings = cinemark_services.get_showing_by_cinema(movie, cinema, format)
+        return cinehoyts_showings + cinemark_showings
 
 
-def get_cinema_showings_by_date(cinema, date) -> ShowDate:
+def get_cinema_showings_by_date(cinema, date, format) -> ShowDate:
     chain = get_chain(cinema)
     if chain == "CINEHOYTS":
-        return cinehoyts_services.get_cinema_showings_by_date(cinema, date)
+        return cinehoyts_services.get_cinema_showings_by_date(cinema, date, format)
     elif chain == "CINEMARK":
-        return cinemark_services.get_cinema_showings_by_date(cinema, date)
+        return cinemark_services.get_cinema_showings_by_date(cinema, date, format)
 
 
-def get_cinema_showings(cinema) -> List[ShowDate]:
+def get_cinema_showings(cinema, format) -> List[ShowDate]:
     chain = get_chain(cinema)
     if chain == "CINEHOYTS":
-        return cinehoyts_services.get_cinema_showings(cinema)
+        return cinehoyts_services.get_cinema_showings(cinema, format)
     elif chain == "CINEMARK":
-        return cinemark_services.get_cinema_showings(cinema)
+        return cinemark_services.get_cinema_showings(cinema, format)
 
 
-def get_general_cinema_showings(cinema: str, date: str = None) -> Tuple[str, int]:
+def get_general_cinema_showings(cinema: str, date: str = None, format: str = None) -> Tuple[str, int]:
     if date:
-        cinema_showings = get_cinema_showings_by_date(cinema, date)
+        cinema_showings = get_cinema_showings_by_date(cinema, date, format)
         message, total = get_movie_date_message([cinema_showings], "CINEMA")
     else:
-        cinema_showings = get_cinema_showings(cinema)
+        cinema_showings = get_cinema_showings(cinema, format)
         message, total = get_movie_date_message(cinema_showings, "CINEMA")
     return message, total
 
@@ -157,9 +161,9 @@ def _get_movie_total(cinemas: List[Cinema]) -> str:
     return message
 
 
-def get_total(date: str) -> str:
-    cinehoyts_total = cinehoyts_services.get_total(date)
-    cinemark_total = cinemark_services.get_total(date)
+def get_total(date: str, format: str) -> str:
+    cinehoyts_total = cinehoyts_services.get_total(date, format)
+    cinemark_total = cinemark_services.get_total(date, format)
     total = _get_movie_total(cinehoyts_total + cinemark_total)
     return total
 

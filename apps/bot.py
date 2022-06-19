@@ -25,52 +25,25 @@ def main():
         print(f"{client.user} has connected to Discord!")
 
     @client.command()
-    async def horarios(ctx, movie: str, date: str, cinema: str = None):
-        message, total = get_general_showings(movie, date, cinema)
+    async def horarios(ctx, movie: str, date: str, cinema: str = None, format: str = None):
+        movie = None if movie in ('skip', 'sk', 'sp') else movie
+        date = None if date in ('skip', 'sk', 'sp') else date
+        cinema = None if cinema in ('skip', 'sk', 'sp') else cinema
+        if date and cinema:
+            message, total = get_general_cinema_showings(cinema, date, format)
+        elif movie and cinema:
+            message, total = get_movie_date_message(get_showing_by_cinema(movie, cinema, format), "CINEMA")
+        else:
+            message, total = get_general_showings(movie, date, cinema, format)
         message = f"{total} HORARIOS EN TOTAL \n——————\n{message}"
         for cinema_showing_part in message.split("$SEPARATOR$"):
             if cinema_showing_part and cinema_showing_part not in ("\n", "\n\n"):
                 await ctx.send(cinema_showing_part)
 
-    @client.command()
-    async def horarios_total(ctx, movie: str, date: str, cinema: str = None):
-        message, total = get_general_showings(movie, date, cinema)
-        message = f"{total} HORARIOS EN TOTAL"
-        await ctx.send(message)
 
     @client.command()
-    async def horarios_cine(ctx, movie: str, cinema: str, format: str = None):
-        cinema_showings = get_showing_by_cinema(movie, cinema, format)
-        message, total = get_movie_date_message(cinema_showings, "CINEMA")
-        message = f"{total} HORARIOS EN TOTAL \n——————\n{message}"
-        for cinema_showing_part in message.split("$SEPARATOR$"):
-            if cinema_showing_part and cinema_showing_part not in ("\n", "\n\n"):
-                await ctx.send(cinema_showing_part)
-
-    @client.command()
-    async def horarios_cine_total(ctx, movie: str, cinema: str, format: str = None):
-        cinema_showings = get_showing_by_cinema(movie, cinema, format)
-        message, total = get_movie_date_message(cinema_showings, "CINEMA")
-        message = f"{total} HORARIOS EN TOTAL"
-        await ctx.send(message)
-
-    @client.command()
-    async def cine(ctx, cinema: str, date: str = None):
-        message, total = get_general_cinema_showings(cinema, date)
-        message = f"{total} HORARIOS EN TOTAL \n——————\n{message}"
-        for cinema_showing_part in message.split("$SEPARATOR$"):
-            if cinema_showing_part and cinema_showing_part not in ("\n", "\n\n"):
-                await ctx.send(cinema_showing_part)
-
-    @client.command()
-    async def cine_total(ctx, cinema: str, date: str = None):
-        message, total = get_general_cinema_showings(cinema, date)
-        message = f"{total} HORARIOS EN TOTAL"
-        await ctx.send(message)
-
-    @client.command()
-    async def total(ctx, date):
-        message = get_total(date)
+    async def total(ctx, date, format: str = None):
+        message = get_total(date, format)
         await ctx.send(message)
 
     @client.command()

@@ -81,12 +81,22 @@ def _get_movie_showings(movie_list: List[Dict[str, Any]], movie_title="batman") 
     return {}
 
 
+def _get_formatted_format(format: str):
+    if format == 'ESP':
+        return '2D ESP'
+    if format == 'SUBT':
+        return '2D SUB'
+    format = format.replace('DOB', 'ESP')
+    format = format.replace('SUBT', 'SUB')
+    return format
+
+
 def _get_showtimes(movie_showings: Dict, format: str = None) -> List[ShowTime]:
     total_showtimes = []
     for formats in movie_showings["Formats"]:
         showtimes = formats["Showtimes"]
-        format_name = formats["Name"]
-        if format and format_name != format:
+        format_name = _get_formatted_format(formats["Name"])
+        if format and format not in format_name:
             continue
         for show in showtimes:
             showtime = show["Time"]
@@ -94,7 +104,7 @@ def _get_showtimes(movie_showings: Dict, format: str = None) -> List[ShowTime]:
     return total_showtimes
 
 
-def get_showings(movie: str, date: str, cinema: str) -> ShowDate:
+def get_showings(movie: str, date: str, cinema: str, format: str) -> ShowDate:
     zone = _get_zone_by_cinema(cinema)
     cinema_showings = _get_cinema_by_cinema_key(
         _get_showings_response_by_zone(zone), cinema
@@ -113,7 +123,7 @@ def get_showings(movie: str, date: str, cinema: str) -> ShowDate:
             Cinema(
                 name=cinema_name,
                 movies=[
-                    Movie(title=movie_title, showtimes=_get_showtimes(movie_showings))
+                    Movie(title=movie_title, showtimes=_get_showtimes(movie_showings, format))
                 ],
             )
         ],
@@ -122,7 +132,7 @@ def get_showings(movie: str, date: str, cinema: str) -> ShowDate:
 
 
 def _get_formatted_showings_by_cinema(
-    date, cinema_key, zone_showings, movie
+    date, cinema_key, zone_showings, movie, format
 ) -> Optional[Cinema]:
     cinema = _get_cinema_by_cinema_key(zone_showings, cinema_key)
     if not cinema:
@@ -138,7 +148,7 @@ def _get_formatted_showings_by_cinema(
             movies.append(
                 Movie(
                     title=movie_showing["Title"],
-                    showtimes=_get_showtimes(movie_showing),
+                    showtimes=_get_showtimes(movie_showing, format),
                 )
             )
     cinema_showtimes = Cinema(name=cinema["Name"], movies=movies)
@@ -146,14 +156,14 @@ def _get_formatted_showings_by_cinema(
 
 
 def _get_formatted_showings_by_zone(
-    date: str, zone: str, movie: str = None
+    date: str, zone: str, movie: str, format: str
 ) -> List[Cinema]:
     zone_showings = _get_showings_response_by_zone(zone)
     cinemas_in_zone = CINEMAS[zone]
     zone_showtimes = []
     for cinema_key in cinemas_in_zone:
         zone_showtime = _get_formatted_showings_by_cinema(
-            date, cinema_key, zone_showings, movie
+            date, cinema_key, zone_showings, movie, format
         )
         if not zone_showtime:
             continue
@@ -161,7 +171,7 @@ def _get_formatted_showings_by_zone(
     return zone_showtimes
 
 
-def get_showings_by_zone(movie: str, date: str, zone: str) -> List[Cinema]:
+def get_showings_by_zone(movie: str, date: str, zone: str, format: str) -> List[Cinema]:
     zone_showings = _get_showings_response_by_zone(zone)
     if zone not in CINEMAS:
         return []
@@ -169,7 +179,7 @@ def get_showings_by_zone(movie: str, date: str, zone: str) -> List[Cinema]:
     cinema_showtimes = []
     for cinema_key in cinemas_in_zone:
         cinema_showtime = _get_formatted_showings_by_cinema(
-            date, cinema_key, zone_showings, movie
+            date, cinema_key, zone_showings, movie, format
         )
         if not cinema_showtime:
             continue
@@ -177,10 +187,10 @@ def get_showings_by_zone(movie: str, date: str, zone: str) -> List[Cinema]:
     return cinema_showtimes
 
 
-def get_showing_by_date(movie: str, date: str) -> List[Cinema]:
+def get_showing_by_date(movie: str, date: str, format: str) -> List[Cinema]:
     cinema_showtimes = []
     for zone in CINEMA_ZONES:
-        cinema_showtime = _get_formatted_showings_by_zone(date, zone, movie)
+        cinema_showtime = _get_formatted_showings_by_zone(date, zone, movie, format)
         if not cinema_showtime:
             continue
         cinema_showtimes += cinema_showtime
@@ -213,7 +223,7 @@ def get_showing_by_cinema(
                         movies=[
                             Movie(
                                 title=movie_title,
-                                showtimes=_get_showtimes(movie_showings),
+                                showtimes=_get_showtimes(movie_showings, format),
                             )
                         ],
                     )
@@ -223,17 +233,17 @@ def get_showing_by_cinema(
     return total_showings
 
 
-def _get_movie_showtimes(showtime_movies: List[Dict[str, Any]]) -> List[Movie]:
+def _get_movie_showtimes(showtime_movies: List[Dict[str, Any]], format: str) -> List[Movie]:
     movies = []
     for movie_showings in showtime_movies:
         movie_title = movie_showings["Title"]
         movies.append(
-            Movie(title=movie_title, showtimes=_get_showtimes(movie_showings))
+            Movie(title=movie_title, showtimes=_get_showtimes(movie_showings, format))
         )
     return movies
 
 
-def get_cinema_showings(cinema: str) -> List[ShowDate]:
+def get_cinema_showings(cinema: str, format: str) -> List[ShowDate]:
     zone = _get_zone_by_cinema(cinema)
     cinema_showings = _get_cinema_by_cinema_key(
         _get_showings_response_by_zone(zone), cinema
@@ -243,7 +253,7 @@ def get_cinema_showings(cinema: str) -> List[ShowDate]:
     total_showings = []
     for showtime_date in cinema_dates:
         showtime_date_name = showtime_date["ShowtimeDate"]
-        movies = _get_movie_showtimes(showtime_date["Movies"])
+        movies = _get_movie_showtimes(showtime_date["Movies"], format)
         total_showings.append(
             ShowDate(
                 date=showtime_date_name,
@@ -253,7 +263,7 @@ def get_cinema_showings(cinema: str) -> List[ShowDate]:
     return total_showings
 
 
-def get_cinema_showings_by_date(cinema: str, date: str) -> ShowDate:
+def get_cinema_showings_by_date(cinema: str, date: str, format: str) -> ShowDate:
     zone = _get_zone_by_cinema(cinema)
     cinema_showings = _get_cinema_by_cinema_key(
         _get_showings_response_by_zone(zone), cinema
@@ -261,16 +271,16 @@ def get_cinema_showings_by_date(cinema: str, date: str) -> ShowDate:
     cinema_name = cinema_showings["Name"]
     showtime_date = _get_showtimes_by_date(cinema_showings, date.replace("-", " "))
     showtime_date_name = showtime_date["ShowtimeDate"]
-    movies = _get_movie_showtimes(showtime_date["Movies"])
+    movies = _get_movie_showtimes(showtime_date["Movies"], format)
     return ShowDate(
         date=showtime_date_name, cinemas=([Cinema(name=cinema_name, movies=movies)])
     )
 
 
-def get_total(date: str) -> List[Cinema]:
+def get_total(date: str, format: str) -> List[Cinema]:
     cinema_showtimes = []
     for zone in CINEMA_ZONES:
-        cinema_showtime = _get_formatted_showings_by_zone(date, zone)
+        cinema_showtime = _get_formatted_showings_by_zone(date, zone, "", format)
         if not cinema_showtime:
             continue
         cinema_showtimes += cinema_showtime
