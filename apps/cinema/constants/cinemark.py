@@ -95,8 +95,7 @@ SANTIAGO = {
 }
 SANTIAGO_CENTRO = {
     "tag": "santiago-centro",
-    "list": [
-],
+    "list": [],
 }
 SANTIAGO_ORIENTE = {
     "tag": "santiago-oriente",
