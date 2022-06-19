@@ -82,7 +82,9 @@ def _format_show_format(showformat: str) -> str:
     return showformat.split("(")[1][:-1].replace("DOB", "ESP").replace("SUBT", "SUB")
 
 
-def _get_movie_showtimes(movie_title, movie_showing, format) -> Movie:
+def _get_movie_showtimes(
+    movie_title: str, movie_showing: Dict[str, Any], format: str
+) -> Movie:
     movie_formats = movie_showing["movie_versions"]
     showtimes = []
     for show_format in movie_formats:
@@ -256,17 +258,3 @@ def get_total(date: str, format: str) -> List[Cinema]:
         cinema = _get_cinema(cinema_tag)
         cinemas_showdates += _get_showings_by_cinema(date, cinema, "", format)
     return cinemas_showdates
-
-
-def get_info_cities():
-    result = ""
-    for city in CINEMA_ZONES_TAGS:
-        result += f"{city}\n"
-    return result
-
-
-def get_info_cinemas():
-    result = ""
-    for cinema in CINEMAS_TAGS:
-        result += f"{cinema}\n"
-    return result
