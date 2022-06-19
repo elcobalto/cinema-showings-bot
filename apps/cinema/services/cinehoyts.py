@@ -218,7 +218,7 @@ def _get_zones(zone_name: str) -> Tuple[List[str], bool]:
     return zones, is_city
 
 
-def _get_zone_showings(zone: str, zone_name: str, is_city) -> List[Dict[str, Any]]:
+def _get_zone_showings(zone: str, zone_name: str, is_city: bool) -> List[Dict[str, Any]]:
     zone_showings = _get_showings_response_by_zone(zone)
     if is_city:
         zone_showings = _get_only_showings_from_cinemas(
