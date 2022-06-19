@@ -25,21 +25,24 @@ def main():
         print(f"{client.user} has connected to Discord!")
 
     @client.command()
-    async def horarios(ctx, movie: str, date: str, cinema: str = None, format: str = None):
-        movie = None if movie in ('skip', 'sk', 'sp') else movie
-        date = None if date in ('skip', 'sk', 'sp') else date
-        cinema = None if cinema in ('skip', 'sk', 'sp') else cinema
+    async def horarios(
+        ctx, movie: str, date: str, cinema: str = None, format: str = None
+    ):
+        movie = None if movie in ("skip", "sk", "sp") else movie
+        date = None if date in ("skip", "sk", "sp") else date
+        cinema = None if cinema in ("skip", "sk", "sp") else cinema
         if not movie and date and cinema:
             message, total = get_general_cinema_showings(cinema, date, format)
         elif movie and not date and cinema:
-            message, total = get_movie_date_message(get_showing_by_cinema(movie, cinema, format), "CINEMA")
+            message, total = get_movie_date_message(
+                get_showing_by_cinema(movie, cinema, format), "CINEMA"
+            )
         else:
             message, total = get_general_showings(movie, date, cinema, format)
         message = f"{total} HORARIOS EN TOTAL \n——————\n{message}"
         for cinema_showing_part in message.split("$SEPARATOR$"):
             if cinema_showing_part and cinema_showing_part not in ("\n", "\n\n"):
                 await ctx.send(cinema_showing_part)
-
 
     @client.command()
     async def total(ctx, date, format: str = None):
