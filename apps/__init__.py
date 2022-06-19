@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Tuple
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.cinema.services import cinehoyts as cinehoyts_services
 from apps.cinema.services import cinemark as cinemark_services
-from apps.constants import CINEMAS_ZONES
+from apps.constants import CINEMAS_ZONES, CINEMAS
 from apps.movie.dataclasses import Movie, ShowTime
 
 
@@ -212,8 +212,24 @@ def get_total(date: str, format: str) -> str:
 
 
 def get_info_cities():
-    return cinehoyts_services.get_info_cities() + cinemark_services.get_info_cities()
+    info = ""
+    uniques = {}
+    CINEMAS_ZONES.sort()
+    for cinema in CINEMAS_ZONES:
+        if cinema in uniques:
+            continue
+        info += f"{cinema}\n"
+        uniques[cinema] = True
+    return info
 
 
 def get_info_cinemas():
-    return cinehoyts_services.get_info_cinemas() + cinemark_services.get_info_cinemas()
+    info = ""
+    uniques = {}
+    CINEMAS.sort()
+    for cinema in CINEMAS:
+        if cinema in uniques:
+            continue
+        info += f"{cinema}\n"
+        uniques[cinema] = True
+    return info
