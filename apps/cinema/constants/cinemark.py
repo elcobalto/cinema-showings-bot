@@ -187,5 +187,19 @@ CINEMA_ZONES = [
     SUR_DE_CHILE,
 ]
 
+CINEMA_MACROZONES = [
+    NORTE_Y_CENTRO_DE_CHILE,
+    SANTIAGO_CENTRO,
+    SANTIAGO_ORIENTE,
+    SANTIAGO_NORTE_Y_PONIENTE,
+    SANTIAGO_SUR,
+    SUR_DE_CHILE,
+]
+
 CINEMAS_TAGS = [cinema["tag"] for city in CINEMA_ZONES for cinema in city["list"]]
 CINEMA_ZONES_TAGS = [city["tag"] for city in CINEMA_ZONES]
+
+TOTAL_CINEMAS_TAGS = [
+    cinema["tag"] for city in CINEMA_MACROZONES for cinema in city["list"]
+]
+TOTAL_CINEMA_ZONES_TAGS = [city["tag"] for city in CINEMA_MACROZONES]

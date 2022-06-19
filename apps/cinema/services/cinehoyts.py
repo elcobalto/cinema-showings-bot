@@ -193,12 +193,14 @@ def _get_formatted_showings_by_cinema(
 def _get_formatted_showings_by_zone(
     date: str, zone: str, movie: str, format: str
 ) -> List[Cinema]:
+    if zone not in CINEMAS:
+        return []
     zone_showings = _get_showings_response_by_zone(zone)
     cinemas_in_zone = CINEMAS[zone]
     zone_showtimes = []
-    for cinema_key in cinemas_in_zone:
+    for cinema in cinemas_in_zone["list"]:
         zone_showtime = _get_formatted_showings_by_cinema(
-            date, cinema_key, zone_showings, movie, format
+            date, cinema["tag"], zone_showings, movie, format
         )
         if not zone_showtime:
             continue
@@ -218,7 +220,9 @@ def _get_zones(zone_name: str) -> Tuple[List[str], bool]:
     return zones, is_city
 
 
-def _get_zone_showings(zone: str, zone_name: str, is_city: bool) -> List[Dict[str, Any]]:
+def _get_zone_showings(
+    zone: str, zone_name: str, is_city: bool
+) -> List[Dict[str, Any]]:
     zone_showings = _get_showings_response_by_zone(zone)
     if is_city:
         zone_showings = _get_only_showings_from_cinemas(
@@ -246,7 +250,7 @@ def get_showings_by_zone(
 
 def get_showing_by_date(movie: str, date: str, format: str) -> List[Cinema]:
     cinema_showtimes = []
-    for zone in CINEMA_ZONES_TAGS:
+    for zone in CINEMAS:
         cinema_showtime = _get_formatted_showings_by_zone(date, zone, movie, format)
         if not cinema_showtime:
             continue
@@ -409,7 +413,7 @@ def get_cinema_showings_by_date_and_zone(
 
 def get_total(date: str, format: str) -> List[Cinema]:
     cinema_showtimes = []
-    for zone in CINEMA_ZONES_TAGS:
+    for zone in CINEMAS:
         cinema_showtime = _get_formatted_showings_by_zone(date, zone, "", format)
         if not cinema_showtime:
             continue

@@ -2,7 +2,12 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
-from apps.cinema.constants.cinemark import CINEMA_ZONES, CINEMA_ZONES_TAGS, CINEMAS_TAGS
+from apps.cinema.constants.cinemark import (
+    CINEMA_ZONES,
+    CINEMA_ZONES_TAGS,
+    CINEMAS_TAGS,
+    TOTAL_CINEMAS_TAGS,
+)
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.movie.dataclasses import Movie, ShowTime
 
@@ -254,7 +259,7 @@ def get_cinema_showings_by_date_and_zone(
 
 def get_total(date: str, format: str) -> List[Cinema]:
     cinemas_showdates = []
-    for cinema_tag in CINEMAS_TAGS:
+    for cinema_tag in TOTAL_CINEMAS_TAGS:
         cinema = _get_cinema(cinema_tag)
         cinemas_showdates += _get_showings_by_cinema(date, cinema, "", format)
     return cinemas_showdates
