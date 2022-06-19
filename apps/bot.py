@@ -4,6 +4,8 @@ import os
 from discord.ext import commands
 
 from apps import (
+    get_cinema_total,
+    get_format_total,
     get_general_cinema_showings,
     get_general_showings,
     get_info_cinemas,
@@ -47,6 +49,16 @@ def main():
     @client.command()
     async def total(ctx, date, format: str = None):
         message = get_total(date, format)
+        await ctx.send(message)
+
+    @client.command()
+    async def total_formatos(ctx, date, format: str = None):
+        message = get_format_total(date, format)
+        await ctx.send(message)
+
+    @client.command()
+    async def total_cinemas(ctx, date, format: str = None):
+        message = get_cinema_total(date, format)
         await ctx.send(message)
 
     @client.command()

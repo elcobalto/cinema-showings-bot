@@ -204,10 +204,60 @@ def _get_movie_total(cinemas: List[Cinema]) -> str:
     return message
 
 
+def _get_format_total(cinemas: List[Cinema]) -> str:
+    total = {}
+    for cinema in cinemas:
+        for movie in cinema.movies:
+            for showtime in movie.showtimes:
+                showtime_format = showtime.format
+                if showtime_format in total:
+                    total[showtime_format] += 1
+                else:
+                    total[showtime_format] = 1
+    total = {
+        k: v for k, v in sorted(total.items(), key=lambda item: item[1], reverse=True)
+    }
+    message = ""
+    for showtime_format in total.keys():
+        message += f"{showtime_format}: {total[showtime_format]}\n"
+    return message
+
+
+def _get_cinema_total(cinemas: List[Cinema]) -> str:
+    total = {}
+    for cinema in cinemas:
+        for movie in cinema.movies:
+            if cinema.name in total:
+                total[cinema.name] += len(movie.showtimes)
+            else:
+                total[cinema.name] = len(movie.showtimes)
+    total = {
+        k: v for k, v in sorted(total.items(), key=lambda item: item[1], reverse=True)
+    }
+    message = ""
+    for cinema_name in total.keys():
+        message += f"{cinema_name}: {total[cinema_name]}\n"
+    return message
+
+
 def get_total(date: str, format: str) -> str:
     cinehoyts_total = cinehoyts_services.get_total(date, format)
     cinemark_total = cinemark_services.get_total(date, format)
     total = _get_movie_total(cinehoyts_total + cinemark_total)
+    return total
+
+
+def get_format_total(date: str, format: str) -> str:
+    cinehoyts_total = cinehoyts_services.get_total(date, format)
+    cinemark_total = cinemark_services.get_total(date, format)
+    total = _get_format_total(cinehoyts_total + cinemark_total)
+    return total
+
+
+def get_cinema_total(date: str, format: str) -> str:
+    cinehoyts_total = cinehoyts_services.get_total(date, format)
+    cinemark_total = cinemark_services.get_total(date, format)
+    total = _get_cinema_total(cinehoyts_total + cinemark_total)
     return total
 
 
