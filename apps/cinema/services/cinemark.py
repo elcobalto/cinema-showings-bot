@@ -82,7 +82,9 @@ def _format_show_format(showformat: str) -> str:
     return showformat.split("(")[1][:-1].replace("DOB", "ESP").replace("SUBT", "SUB")
 
 
-def _get_movie_showtimes(movie_title: str, movie_showing: Dict[str, Any], format: str) -> Movie:
+def _get_movie_showtimes(
+    movie_title: str, movie_showing: Dict[str, Any], format: str
+) -> Movie:
     movie_formats = movie_showing["movie_versions"]
     showtimes = []
     for show_format in movie_formats:

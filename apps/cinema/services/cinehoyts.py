@@ -70,7 +70,9 @@ def _get_cinemas_by_zone(zone: str) -> List[Dict[str, Any]]:
     return []
 
 
-def _get_only_showings_from_cinemas(cinema_showings: List[Dict[str, Any]], cinemas: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _get_only_showings_from_cinemas(
+    cinema_showings: List[Dict[str, Any]], cinemas: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
     reduced_cinema_showings = []
     for cinema_showing in cinema_showings:
         for cinema in cinemas:
@@ -161,7 +163,11 @@ def get_showings(movie: str, date: str, cinema: str, format: str) -> Optional[Sh
 
 
 def _get_formatted_showings_by_cinema(
-    date: str, cinema_key: str, zone_showings: List[Dict[str, Any]], movie: str, format: str
+    date: str,
+    cinema_key: str,
+    zone_showings: List[Dict[str, Any]],
+    movie: str,
+    format: str,
 ) -> Optional[Cinema]:
     cinema = _get_cinema_by_cinema_key(zone_showings, cinema_key)
     if not cinema:

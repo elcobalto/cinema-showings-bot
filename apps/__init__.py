@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Tuple
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.cinema.services import cinehoyts as cinehoyts_services
 from apps.cinema.services import cinemark as cinemark_services
-from apps.constants import CINEMAS_ZONES, CINEMAS
+from apps.constants import CINEMAS, CINEMAS_ZONES
 from apps.movie.dataclasses import Movie, ShowTime
 
 
