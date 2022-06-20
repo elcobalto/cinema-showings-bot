@@ -5,7 +5,6 @@ import requests
 from apps.cinema.constants.cinehoyts import (
     CINEMA_CITIES,
     CINEMA_ZONES,
-    CINEMA_ZONES_TAGS,
     CINEMAS,
     CINEMAS_SANTIAGO,
     NORTE_Y_CENTRO_DE_CHILE,
@@ -128,7 +127,7 @@ def _get_showtimes(movie_showings: Dict, format: str = None) -> List[ShowTime]:
             continue
         for show in showtimes:
             showtime = show["Time"]
-            total_showtimes.append(ShowTime(showtime=showtime, format=format_name))
+            total_showtimes.append(ShowTime(showtime=showtime, format=format_name, seats=""))
     return total_showtimes
 
 

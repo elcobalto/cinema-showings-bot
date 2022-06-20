@@ -1,7 +1,7 @@
 import os
 import sys
 
-from apps import bot as cinema_showings_bot
+from apps.discord import services as cinema_showings_bot
 
 
 def main():

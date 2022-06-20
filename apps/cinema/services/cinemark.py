@@ -98,7 +98,7 @@ def _get_movie_showtimes(
             continue
         for timeshow in show_format["sessions"]:
             showtime = timeshow["hour"]
-            showtimes.append(ShowTime(showtime=showtime[:-3], format=format_name))
+            showtimes.append(ShowTime(showtime=showtime[:-3], format=format_name, seats=timeshow['seats_available']))
     return Movie(title=movie_title, showtimes=showtimes)
 
 

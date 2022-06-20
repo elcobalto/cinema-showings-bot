@@ -1,11 +1,12 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
 class ShowTime:
     showtime: str
     format: str
+    seats: Optional[str]
 
 
 @dataclass
