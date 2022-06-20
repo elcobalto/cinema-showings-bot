@@ -34,13 +34,13 @@ def main():
         date = None if date in ("skip", "sk", "sp") else date
         cinema = None if cinema in ("skip", "sk", "sp") else cinema
         if not movie and date and cinema:
-            message, total = get_general_cinema_showings(cinema, date, format)
+            message, total = get_general_cinema_showings(cinema=cinema, date=date, format=format)
         elif movie and not date and cinema:
             message, total = get_movie_date_message(
-                get_showing_by_cinema(movie, cinema, format), "CINEMA"
+                showdates=get_showing_by_cinema(movie=movie, cinema=cinema, format=format), separator_type="CINEMA"
             )
         else:
-            message, total = get_general_showings(movie, date, cinema, format)
+            message, total = get_general_showings(movie=movie, date=date, cinema=cinema, format=format)
         message = f"{total} HORARIOS EN TOTAL \n——————\n{message}"
         for cinema_showing_part in message.split("$SEPARATOR$"):
             if cinema_showing_part and cinema_showing_part not in ("\n", "\n\n"):
@@ -48,17 +48,17 @@ def main():
 
     @client.command()
     async def total(ctx, date, format: str = None):
-        message = get_total(date, format)
+        message = get_total(date=date, format=format)
         await ctx.send(message)
 
     @client.command()
     async def total_formatos(ctx, date, format: str = None):
-        message = get_format_total(date, format)
+        message = get_format_total(date=date, format=format)
         await ctx.send(message)
 
     @client.command()
     async def total_cinemas(ctx, date, format: str = None):
-        message = get_cinema_total(date, format)
+        message = get_cinema_total(date=date, format=format)
         await ctx.send(message)
 
     @client.command()
