@@ -3,7 +3,7 @@ import os
 
 from discord.ext import commands
 
-from apps import (
+from apps.discord import (
     get_cinema_total,
     get_format_total,
     get_general_cinema_showings,
