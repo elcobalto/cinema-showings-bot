@@ -7,12 +7,12 @@ from apps.cinema.constants.cinehoyts import (
     CINEMA_ZONES,
     CINEMAS,
     CINEMAS_SANTIAGO,
-    NORTE_Y_CENTRO_DE_CHILE,
-    SANTIAGO_CENTRO,
-    SANTIAGO_NORTE_Y_PONIENTE,
-    SANTIAGO_ORIENTE,
-    SANTIAGO_SUR,
-    SUR_DE_CHILE,
+    NORTE_Y_CENTRO_DE_CHILE_TAGS,
+    SANTIAGO_CENTRO_TAGS,
+    SANTIAGO_NORTE_Y_PONIENTE_TAGS,
+    SANTIAGO_ORIENTE_TAGS,
+    SANTIAGO_SUR_TAGS,
+    SUR_DE_CHILE_TAGS,
 )
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.movie.dataclasses import Movie, ShowTime
@@ -28,17 +28,17 @@ def _get_cinemas_from_zone(zone_name: str) -> List[str]:
 
 
 def _get_zone_by_cinema(cinema: str) -> Optional[str]:
-    if cinema in NORTE_Y_CENTRO_DE_CHILE:
+    if cinema in NORTE_Y_CENTRO_DE_CHILE_TAGS:
         return "norte-y-centro-de-chile"
-    elif cinema in SANTIAGO_CENTRO:
+    elif cinema in SANTIAGO_CENTRO_TAGS:
         return "santiago-centro"
-    elif cinema in SANTIAGO_ORIENTE:
+    elif cinema in SANTIAGO_ORIENTE_TAGS:
         return "santiago-oriente"
-    elif cinema in SANTIAGO_NORTE_Y_PONIENTE:
+    elif cinema in SANTIAGO_NORTE_Y_PONIENTE_TAGS:
         return "santiago-poniente-y-norte"
-    elif cinema in SANTIAGO_SUR:
+    elif cinema in SANTIAGO_SUR_TAGS:
         return "santiago-sur"
-    elif cinema in SUR_DE_CHILE:
+    elif cinema in SUR_DE_CHILE_TAGS:
         return "sur-de-chile"
     return None
 
@@ -80,7 +80,16 @@ def _get_only_showings_from_cinemas(
     return reduced_cinema_showings
 
 
-def _get_cinema_by_cinema_key(
+def get_cinema_by_cinema_key(cinema_name: str) -> Optional[Dict[str, Any]]:
+    for zone in CINEMA_ZONES:
+        cinemas_in_zone = zone["list"]
+        for cinema in cinemas_in_zone:
+            if cinema_name == cinema["tag"]:
+                return cinema
+    return None
+
+
+def get_cinema_by_cinemas_and_cinema_key(
     cinemas: List[Dict[str, Any]], cinema_key: str
 ) -> Dict[str, Any]:
     for cinema in cinemas:
@@ -133,7 +142,7 @@ def _get_showtimes(movie_showings: Dict, format: str = None) -> List[ShowTime]:
 
 def get_showings(movie: str, date: str, cinema: str, format: str) -> Optional[ShowDate]:
     zone = _get_zone_by_cinema(cinema)
-    cinema_showings = _get_cinema_by_cinema_key(
+    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
         _get_showings_response_by_zone(zone), cinema
     )
     if not cinema_showings:
@@ -168,7 +177,7 @@ def _get_formatted_showings_by_cinema(
     movie: str,
     format: str,
 ) -> Optional[Cinema]:
-    cinema = _get_cinema_by_cinema_key(zone_showings, cinema_key)
+    cinema = get_cinema_by_cinemas_and_cinema_key(zone_showings, cinema_key)
     if not cinema:
         return None
     showtime_date = _get_showtimes_by_date(cinema, date.replace("-", " "))
@@ -286,7 +295,7 @@ def get_showing_by_cinema(
     movie: str, cinema: str, format: str = None
 ) -> List[ShowDate]:
     zone = _get_zone_by_cinema(cinema)
-    cinema_showings = _get_cinema_by_cinema_key(
+    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
         _get_showings_response_by_zone(zone), cinema
     )
     cinema_name = cinema_showings["Name"]
@@ -335,7 +344,7 @@ def _get_movie_showtimes(
 
 def get_cinema_showings(cinema: str, format: str) -> List[ShowDate]:
     zone = _get_zone_by_cinema(cinema)
-    cinema_showings = _get_cinema_by_cinema_key(
+    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
         _get_showings_response_by_zone(zone), cinema
     )
     cinema_name = cinema_showings["Name"]
@@ -375,7 +384,7 @@ def get_cinema_showings_by_zone(zone_name: str, format: str) -> List[ShowDate]:
 
 def get_cinema_showings_by_date(cinema: str, date: str, format: str) -> ShowDate:
     zone = _get_zone_by_cinema(cinema)
-    cinema_showings = _get_cinema_by_cinema_key(
+    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
         _get_showings_response_by_zone(zone), cinema
     )
     cinema_name = cinema_showings["Name"]

@@ -40,7 +40,7 @@ def _get_cinemas_from_zone(zone_name: str) -> List[Dict[str, Any]]:
     return []
 
 
-def _get_cinema(cinema_name: str) -> Optional[Dict[str, Any]]:
+def get_cinema_by_cinema_key(cinema_name: str) -> Optional[Dict[str, Any]]:
     for zone in CINEMA_ZONES:
         cinemas_in_zone = zone["list"]
         for cinema in cinemas_in_zone:
@@ -117,7 +117,7 @@ def _get_formatted_movie_showings(
 
 
 def get_showings(movie: str, date: str, cinema_name: str, format: str) -> ShowDate:
-    cinema = _get_cinema(cinema_name)
+    cinema = get_cinema_by_cinema_key(cinema_name)
     dateshows = _get_showings_response_by_zone(cinema["id"])
     cinemas = []
     for dateshow in dateshows:
@@ -260,6 +260,6 @@ def get_cinema_showings_by_date_and_zone(
 def get_total(date: str, format: str) -> List[Cinema]:
     cinemas_showdates = []
     for cinema_tag in TOTAL_CINEMAS_TAGS:
-        cinema = _get_cinema(cinema_tag)
+        cinema = get_cinema_by_cinema_key(cinema_tag)
         cinemas_showdates += _get_showings_by_cinema(date, cinema, "", format)
     return cinemas_showdates

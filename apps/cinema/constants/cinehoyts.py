@@ -60,6 +60,7 @@ NORTE_Y_CENTRO_DE_CHILE = {
         CINEHOYTS_VALPARAISO,
     ],
 }
+NORTE_Y_CENTRO_DE_CHILE_TAGS = [city["tag"] for city in NORTE_Y_CENTRO_DE_CHILE["list"]]
 
 
 ARAUCO_ESTACION = {
@@ -73,6 +74,7 @@ VIVO_IMPERIO = {
     "id": "cinepolis-vivo-imperio",
 }
 SANTIAGO_CENTRO = {"tag": "santiago-centro", "list": [ARAUCO_ESTACION, VIVO_IMPERIO]}
+SANTIAGO_CENTRO_TAGS = [city["tag"] for city in SANTIAGO_CENTRO["list"]]
 
 CASA_COSTANERA = {
     "name": "Cinepolis Casa Costanera",
@@ -139,6 +141,7 @@ SANTIAGO_ORIENTE = {
         PARQUE_ARAUCO_PREMIUM_CLASS,
     ],
 }
+SANTIAGO_ORIENTE_TAGS = [city["tag"] for city in SANTIAGO_ORIENTE["list"]]
 
 ARAUCO_MAIPU = {
     "name": "CineHoyts Arauco Maipú",
@@ -169,6 +172,8 @@ SANTIAGO_NORTE_Y_PONIENTE = {
         ESPACIO_URBANO_MELIPILLA,
     ],
 }
+SANTIAGO_NORTE_Y_PONIENTE_TAGS = [city["tag"] for city in SANTIAGO_NORTE_Y_PONIENTE["list"]]
+
 
 ESPACIO_URBANO_PUENTE_ALTO = {
     "name": "Cinepolis Espacio Urbano Puente Alto",
@@ -205,6 +210,7 @@ SANTIAGO_SUR = {
         PASEO_SAN_BERNARDO,
     ],
 }
+SANTIAGO_SUR_TAGS = [city["tag"] for city in SANTIAGO_SUR["list"]]
 SANTIAGO = {
     "tag": "santiago",
     "list": [
@@ -299,6 +305,7 @@ SUR_DE_CHILE = {
         PASEO_CHILOE,
     ],
 }
+SUR_DE_CHILE_TAGS = [city["tag"] for city in SUR_DE_CHILE["list"]]
 
 CINEMAS = {
     "norte-y-centro-de-chile": NORTE_Y_CENTRO_DE_CHILE,

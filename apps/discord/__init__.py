@@ -55,20 +55,20 @@ def get_general_showings(
     return message, total
 
 
-def get_showing_by_cinema(movie, cinema, format) -> List[ShowDate]:
+def get_showing_by_cinema(movie: str, cinema: str, format: str) -> List[ShowDate]:
     cinema_is_zone = cinema in CINEMAS_ZONES
     if not cinema_is_zone:
         chain = get_chain(cinema)
         if chain == "CINEHOYTS":
             return cinehoyts_services.get_showing_by_cinema(movie, cinema, format)
         elif chain == "CINEMARK":
-            return cinemark_services.get_showing_by_cinema(movie, cinema, format)
+            return cinemark_services.get_showing_by_cinema(movie, cinemark_services.get_cinema_by_cinema_key(cinema), format)
         else:
             cinehoyts_showings = cinehoyts_services.get_showing_by_cinema(
                 movie, cinema, format
             )
             cinemark_showings = cinemark_services.get_showing_by_cinema(
-                movie, cinema, format
+                movie, cinemark_services.get_cinema_by_cinema_key(cinema), format
             )
             return cinehoyts_showings + cinemark_showings
     else:
@@ -84,7 +84,7 @@ def get_cinema_showings_by_date(cinema, date, format) -> ShowDate:
     if chain == "CINEHOYTS":
         return cinehoyts_services.get_cinema_showings_by_date(cinema, date, format)
     elif chain == "CINEMARK":
-        return cinemark_services.get_cinema_showings_by_date(cinema, date, format)
+        return cinemark_services.get_cinema_showings_by_date(cinemark_services.get_cinema_by_cinema_key(cinema), date, format)
 
 
 def get_cinema_showings_by_date_and_zone(cinema, date, format) -> List[ShowDate]:
