@@ -20,39 +20,59 @@ from apps.movie.dataclasses import Movie, ShowTime
 CINEHOYTS_HOST = "https://cinehoyts.cl"
 
 
-def _get_cinemas_from_zone(zone_name: str) -> List[str]:
-    for cinema_zone in CINEMA_ZONES:
-        if zone_name == cinema_zone["tag"]:
-            return cinema_zone["list"]
-    return []
-
-
-def _get_zone_by_cinema(cinema: str) -> Optional[str]:
-    if cinema in NORTE_Y_CENTRO_DE_CHILE_TAGS:
+def _get_zone_by_cinema_tag(cinema_tag: str) -> Optional[str]:
+    """
+    Gets a zone tag from a cinema tag. Returns None for a not mapped zone tag.
+    :param cinema_tag: cinema tag.
+    :return: Zone tag.
+    """
+    if cinema_tag in NORTE_Y_CENTRO_DE_CHILE_TAGS:
         return "norte-y-centro-de-chile"
-    elif cinema in SANTIAGO_CENTRO_TAGS:
+    elif cinema_tag in SANTIAGO_CENTRO_TAGS:
         return "santiago-centro"
-    elif cinema in SANTIAGO_ORIENTE_TAGS:
+    elif cinema_tag in SANTIAGO_ORIENTE_TAGS:
         return "santiago-oriente"
-    elif cinema in SANTIAGO_NORTE_Y_PONIENTE_TAGS:
+    elif cinema_tag in SANTIAGO_NORTE_Y_PONIENTE_TAGS:
         return "santiago-poniente-y-norte"
-    elif cinema in SANTIAGO_SUR_TAGS:
+    elif cinema_tag in SANTIAGO_SUR_TAGS:
         return "santiago-sur"
-    elif cinema in SUR_DE_CHILE_TAGS:
+    elif cinema_tag in SUR_DE_CHILE_TAGS:
         return "sur-de-chile"
     return None
 
 
-def is_chain(cinema: str) -> bool:
-    zone = _get_zone_by_cinema(cinema)
+def _get_zones_by_cinema_tag(cinema_tag: str) -> List[str]:
+    """
+    Gets a zone tag from a cinema tag. Returns None for a not mapped zone tag.
+    :param cinema_tag: cinema tag.
+    :return: Zone tag.
+    """
+    zone = _get_zone_by_cinema_tag(cinema_tag=cinema_tag)
+    if zone:
+        return [zone]
+    return CINEMAS.keys()
+
+
+def is_chain(cinema_tag: str) -> bool:
+    """
+    Determines if a cinema belongs to the CineHoyts chain.
+    :param cinema_tag: Cinema tag.
+    :return: Descriptor if a cinema is from CineHoyts.
+    """
+    zone = _get_zone_by_cinema_tag(cinema_tag=cinema_tag)
     return zone is not None
 
 
-def _get_showings_response_by_zone(
-    zone: str = "santiago-oriente",
+def _get_showings_response_by_zone_tag(
+    zone_tag: str = "santiago-oriente",
 ) -> List[Dict[str, Any]]:
+    """
+    Gets showings response from a zone tag.
+    :param zone_tag: Zone tag.
+    :return: Showings response.
+    """
     try:
-        payload = {"claveCiudad": zone, "esVIP": True}
+        payload = {"claveCiudad": zone_tag, "esVIP": True}
         showings = requests.post(
             f"{CINEHOYTS_HOST}/Cartelera.aspx/GetNowPlayingByCity", json=payload
         )
@@ -62,16 +82,27 @@ def _get_showings_response_by_zone(
         return []
 
 
-def _get_cinemas_by_zone(zone: str) -> List[Dict[str, Any]]:
+def _get_cinemas_by_zone_tag(zone_tag: str) -> List[Dict[str, Any]]:
+    """
+    Gets a cinema dataclass list from a general zone name.
+    :param zone_name: Zone name.
+    :return: List of cinema dataclasses.
+    """
     for cinema_zone in CINEMA_ZONES:
-        if cinema_zone["tag"] == zone:
+        if cinema_zone["tag"] == zone_tag:
             return cinema_zone["list"]
     return []
 
 
-def _get_only_showings_from_cinemas(
+def _get_showings_from_specific_cinemas(
     cinema_showings: List[Dict[str, Any]], cinemas: List[Dict[str, Any]]
 ) -> List[Dict[str, Any]]:
+    """
+    Gets reduced showings from a list of specific cinemas.
+    :param cinema_showings: List of unreduced cinema showings.
+    :param cinemas: List of cinemas.
+    :return: List of reduced cinema showings.
+    """
     reduced_cinema_showings = []
     for cinema_showing in cinema_showings:
         for cinema in cinemas:
@@ -80,135 +111,224 @@ def _get_only_showings_from_cinemas(
     return reduced_cinema_showings
 
 
-def get_cinema_by_cinema_key(cinema_name: str) -> Optional[Dict[str, Any]]:
-    for zone in CINEMA_ZONES:
-        cinemas_in_zone = zone["list"]
-        for cinema in cinemas_in_zone:
-            if cinema_name == cinema["tag"]:
-                return cinema
-    return None
-
-
-def get_cinema_by_cinemas_and_cinema_key(
-    cinemas: List[Dict[str, Any]], cinema_key: str
+def _get_showing_by_cinemas_and_cinema_tag(
+    showings: List[Dict[str, Any]], cinema_tag: str
 ) -> Dict[str, Any]:
-    for cinema in cinemas:
-        if cinema["Key"] == cinema_key:
-            return cinema
+    """
+    Gets a cinema dataclass object from cinema list and to be searched cinema tag.
+    :param showings: List of cinema dataclass objects.
+    :param cinema_tag: Cinema tag to be searched.
+    :return: Searched cinema dataclass object.
+    """
+    for cinema_showing in showings:
+        if cinema_showing["Key"] == cinema_tag:
+            return cinema_showing
     return {}
 
 
-def _get_showtimes_by_date(cinemas: Dict[str, Any], date_name: str) -> Dict[str, Any]:
-    for date in cinemas["Dates"]:
-        formatted_showing_date = date["ShowtimeDate"].replace(" ", "-")
-        day, month = formatted_showing_date.split("-")
+def _get_showtime_by_date(showing: Dict[str, Any], date_name: str) -> Dict[str, Any]:
+    """
+    Gets cinema showtimes by an specific date.
+    :param showing: Cinema with showtimes.
+    :param date_name: Date to be searched.
+    :return: Cinema showtime.
+    """
+    for showtime_date in showing["Dates"]:
+        formatted_showtime_date = showtime_date["ShowtimeDate"].replace(" ", "-")
+        day, month = formatted_showtime_date.split("-")
         if int(day) < 10 and len(day) == 2:
-            formatted_showing_date = formatted_showing_date[1:]
+            formatted_showtime_date = formatted_showtime_date[1:]
         formatted_searched_date = date_name.replace(" ", "-")
-        if formatted_showing_date == formatted_searched_date:
-            return date
+        if formatted_showtime_date == formatted_searched_date:
+            return showtime_date
     return {}
 
 
-def _get_movie_showings(movie_list: List[Dict[str, Any]], movie_title="batman") -> Dict:
+def _check_date(date: str, showtime_date: Dict[str, Any]) -> bool:
+    """
+
+    :param showtime_date:
+    :param date:
+    :return:
+    """
+    formatted_showtime_date = showtime_date["ShowtimeDate"].replace(" ", "-")
+    day, month = formatted_showtime_date.split("-")
+    if int(day) < 10 and len(day) == 2:
+        formatted_showtime_date = formatted_showtime_date[1:]
+    formatted_searched_date = date.replace(" ", "-")
+    return formatted_showtime_date == formatted_searched_date
+
+
+def _get_movie_showings(movie_list: List[Dict[str, Any]], movie_tag: str) -> Dict:
+    """
+    Gets movie showings from list of movies with a to be searched movie title.
+    :param movie_list: List of movie showings.
+    :param movie_tag: Movie title.
+    :return: Movie showings.
+    """
     for movie in movie_list:
-        if movie_title in movie["Key"] or movie["Key"] in movie_title:
+        if movie_tag in movie["Key"] or movie["Key"] in movie_tag:
             return movie
     return {}
 
 
-def _get_formatted_format(format: str):
-    if format == "ESP":
+def _get_formatted_show_format(show_format: str):
+    """
+    Formats a showtime format.
+    :param show_format: Showtime format.
+    :return: Formatted showtime format.
+    """
+    if show_format == "ESP":
         return "2D ESP"
-    if format == "SUBT":
+    if show_format == "SUBT":
         return "2D SUB"
-    format = format.replace("DOB", "ESP")
-    format = format.replace("SUBT", "SUB")
-    return format
+    show_format = show_format.replace("DOB", "ESP")
+    show_format = show_format.replace("SUBT", "SUB")
+    return show_format
 
 
-def _get_showtimes(movie_showings: Dict, format: str = None) -> List[ShowTime]:
+def _get_showtimes(movie_showings: Dict, show_format: str = None) -> List[ShowTime]:
+    """
+    Gets list of showtimes dataclasses objects from movie showings. Filtered by format if given.
+    :param movie_showings: Movie showings.
+    :param show_format: Optional showtime format.
+    :return: List of showtimes dataclasses objects.
+    """
     total_showtimes = []
     for formats in movie_showings["Formats"]:
         showtimes = formats["Showtimes"]
-        format_name = _get_formatted_format(formats["Name"])
-        if format and format not in format_name:
+        format_name = _get_formatted_show_format(show_format=formats["Name"])
+        if show_format and show_format not in format_name:
             continue
         for show in showtimes:
             showtime = show["Time"]
-            total_showtimes.append(ShowTime(showtime=showtime, format=format_name, seats=""))
+            total_showtimes.append(
+                ShowTime(showtime=showtime, format=format_name, seats="")
+            )
     return total_showtimes
 
 
-def get_showings(movie: str, date: str, cinema: str, format: str) -> Optional[ShowDate]:
-    zone = _get_zone_by_cinema(cinema)
-    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
-        _get_showings_response_by_zone(zone), cinema
-    )
-    if not cinema_showings:
-        return None
-    cinema_name = cinema_showings["Name"]
-    showtime_date = _get_showtimes_by_date(cinema_showings, date)
-    showtime_date_name = showtime_date["ShowtimeDate"]
-    showtime_movies = showtime_date["Movies"]
-    movie_showings = _get_movie_showings(showtime_movies, movie)
-    movie_title = movie_showings["Title"]
-    showdate = ShowDate(
-        date=showtime_date_name,
-        cinemas=[
-            Cinema(
-                name=cinema_name,
-                movies=[
-                    Movie(
-                        title=movie_title,
-                        showtimes=_get_showtimes(movie_showings, format),
+def get_showings(
+    movie_tag: str, date: str, cinema_tag: str, show_format: str
+) -> List[ShowDate]:
+    """
+    Gets showings from an specific movie, date, cinema and show_format.
+    :param movie_tag: Movie title
+    :param date: Date.
+    :param cinema_tag: Cinema tag.
+    :param show_format: Format of the showtime.
+    :return: Showdate searched if found.
+    """
+    zones = _get_zones_by_cinema_tag(cinema_tag=cinema_tag)
+    total: Dict[str, Dict[str, List[Movie]]] = {}
+    for zone in zones:
+        showings = _get_showings_response_by_zone_tag(zone_tag=zone)
+        for cinema_showing in showings:
+            if not cinema_showing["Key"] == cinema_tag:
+                continue
+            cinema_name = cinema_showing["Name"]
+            for showtime_date in cinema_showing["Dates"]:
+                is_date = _check_date(date=date, showtime_date=showtime_date)
+                if not is_date:
+                    continue
+                showtime_date_name = showtime_date["ShowtimeDate"]
+                showtime_movies = showtime_date["Movies"]
+                movies = []
+                for movie in showtime_movies:
+                    if movie_tag or not (
+                        movie_tag in movie["Key"] or movie["Key"] in movie_tag
+                    ):
+                        continue
+                    movie_showings = _get_movie_showings(
+                        movie_list=showtime_movies, movie_tag=movie_tag
                     )
-                ],
-            )
-        ],
-    )
-    return showdate
+                    movie_title = movie_showings["Title"]
+                    showtimes = _get_showtimes(
+                        movie_showings=movie_showings, show_format=show_format
+                    )
+                    movies.append(Movie(title=movie_title, showtimes=showtimes))
+                if (
+                    showtime_date_name not in total
+                    or cinema_name not in total[showtime_date_name]
+                ):
+                    total[showtime_date_name] = {cinema_name: movies}
+                else:
+                    total[showtime_date_name][cinema_name] += movies
+    showdates = []
+    for showtime in total.keys():
+        cinemas = []
+        for cinema in total[showtime].keys():
+            cinemas.append(Cinema(name=cinema, movies=total[showtime][cinema]))
+        showdates.append(ShowDate(date=showtime, cinemas=cinemas))
+    return showdates
 
 
-def _get_formatted_showings_by_cinema(
-    date: str,
-    cinema_key: str,
+def _get_formatted_cinema_showings_by_cinema_tag(
     zone_showings: List[Dict[str, Any]],
-    movie: str,
-    format: str,
+    movie_tag: str,
+    date: str,
+    cinema_tag: str,
+    show_format: str,
 ) -> Optional[Cinema]:
-    cinema = get_cinema_by_cinemas_and_cinema_key(zone_showings, cinema_key)
-    if not cinema:
+    """
+    Gets the showings from a cinema, formatted into a Cinema dataclass.
+    :param date: Date to be searched.
+    :param cinema_tag: Cinema tag name.
+    :param zone_showings: Showings of the zone.
+    :param movie_tag: Movie title
+    :param show_format: Showtime format.
+    :return: Cinema with showings if found.
+    """
+    cinema_showing = _get_showing_by_cinemas_and_cinema_tag(
+        showings=zone_showings, cinema_tag=cinema_tag
+    )
+    if not cinema_showing:
         return None
-    showtime_date = _get_showtimes_by_date(cinema, date.replace("-", " "))
+    showtime_date = _get_showtime_by_date(
+        showing=cinema_showing, date_name=date.replace("-", " ")
+    )
     if not showtime_date:
         return None
     movies = []
     for movie_showing in showtime_date["Movies"]:
-        if not movie or (
-            movie in movie_showing["Key"] or movie_showing["Key"] in movie
+        if not movie_tag or (
+            movie_tag in movie_showing["Key"] or movie_showing["Key"] in movie_tag
         ):
             movies.append(
                 Movie(
                     title=movie_showing["Title"],
-                    showtimes=_get_showtimes(movie_showing, format),
+                    showtimes=_get_showtimes(
+                        movie_showings=movie_showing, show_format=show_format
+                    ),
                 )
             )
-    cinema_showtimes = Cinema(name=cinema["Name"], movies=movies)
+    cinema_showtimes = Cinema(name=cinema_showing["Name"], movies=movies)
     return cinema_showtimes
 
 
-def _get_formatted_showings_by_zone(
-    date: str, zone: str, movie: str, format: str
+def _get_formatted_cinemas_showings_by_zone_tag(
+    movie_tag: str, date: str, zone_tag: str, show_format: str
 ) -> List[Cinema]:
-    if zone not in CINEMAS:
+    """
+    Gets the showings from a zone, formatted into a list of Cinema dataclasses.
+    :param date: Date
+    :param zone_tag: Zone tag name.
+    :param movie_tag: Movie title.
+    :param show_format: Format of the show.
+    :return: List of found cinemas with showings.
+    """
+    if zone_tag not in CINEMAS:
         return []
-    zone_showings = _get_showings_response_by_zone(zone)
-    cinemas_in_zone = CINEMAS[zone]
+    zone_showings = _get_showings_response_by_zone_tag(zone_tag=zone_tag)
+    cinemas_in_zone = CINEMAS[zone_tag]
     zone_showtimes = []
     for cinema in cinemas_in_zone["list"]:
-        zone_showtime = _get_formatted_showings_by_cinema(
-            date, cinema["tag"], zone_showings, movie, format
+        zone_showtime = _get_formatted_cinema_showings_by_cinema_tag(
+            zone_showings=zone_showings,
+            movie_tag=movie_tag,
+            date=date,
+            cinema_tag=cinema["tag"],
+            show_format=show_format,
         )
         if not zone_showtime:
             continue
@@ -216,7 +336,12 @@ def _get_formatted_showings_by_zone(
     return zone_showtimes
 
 
-def _get_zones(zone_name: str) -> Tuple[List[str], bool]:
+def _get_zones_tags(zone_name: str) -> Tuple[List[str], bool]:
+    """
+    Gets mapped zones by zone_tags.
+    :param zone_name: Zone name.
+    :return: List of related zone tags.
+    """
     is_city = False
     if zone_name == "santiago":
         zones = CINEMAS_SANTIAGO
@@ -229,26 +354,48 @@ def _get_zones(zone_name: str) -> Tuple[List[str], bool]:
 
 
 def _get_zone_showings(
-    zone: str, zone_name: str, is_city: bool
+    zone_tag: str, zone_name: str, is_city: bool
 ) -> List[Dict[str, Any]]:
-    zone_showings = _get_showings_response_by_zone(zone)
+    """
+    Gets zone showings from zone tag, zone names and the fact if a zone name refers to a city.
+    :param zone_tag: Zone tag.
+    :param zone_name: Zone specific name.
+    :param is_city: If a zone name refers to a city.
+    :return: List of zone showings.
+    """
+    zone_showings = _get_showings_response_by_zone_tag(zone_tag=zone_tag)
     if is_city:
-        zone_showings = _get_only_showings_from_cinemas(
-            zone_showings, _get_cinemas_by_zone(zone_name)
+        zone_showings = _get_showings_from_specific_cinemas(
+            cinema_showings=zone_showings,
+            cinemas=_get_cinemas_by_zone_tag(zone_tag=zone_name),
         )
     return zone_showings
 
 
-def get_showings_by_zone(
-    movie: str, date: str, zone_name: str, format: str
+def get_cinemas_showings_by_zone(
+    movie_tag: str, date: str, zone_name: str, show_format: str
 ) -> List[Cinema]:
-    zones, is_city = _get_zones(zone_name)
+    """
+    Gets showings for a movie, date and format, filtered by zone.
+    :param movie_tag: Movie title.
+    :param date: Date.
+    :param zone_name: Zone specific name.
+    :param show_format: Show format.
+    :return: List of filtered cinema showings.
+    """
+    zones, is_city = _get_zones_tags(zone_name=zone_name)
     cinema_showtimes = []
     for zone in zones:
-        zone_showings = _get_zone_showings(zone, zone_name, is_city)
+        zone_showings = _get_zone_showings(
+            zone_tag=zone, zone_name=zone_name, is_city=is_city
+        )
         for cinema in zone_showings:
-            cinema_showtime = _get_formatted_showings_by_cinema(
-                date, cinema["Key"], zone_showings, movie, format
+            cinema_showtime = _get_formatted_cinema_showings_by_cinema_tag(
+                zone_showings=zone_showings,
+                movie_tag=movie_tag,
+                date=date,
+                cinema_tag=cinema["Key"],
+                show_format=show_format,
             )
             if not cinema_showtime:
                 continue
@@ -256,123 +403,79 @@ def get_showings_by_zone(
     return cinema_showtimes
 
 
-def get_showing_by_date(movie: str, date: str, format: str) -> List[Cinema]:
-    cinema_showtimes = []
-    for zone in CINEMAS:
-        cinema_showtime = _get_formatted_showings_by_zone(date, zone, movie, format)
-        if not cinema_showtime:
-            continue
-        cinema_showtimes += cinema_showtime
-    return cinema_showtimes
-
-
-def _get_showdate_from_showtime_date(
-    showtime_date: Dict[str, Any], movie: str, cinema_name: str, format: str
+def _get_showdate_by_showtime_date(
+    movie_tag: str, showtime_date: Dict[str, Any], cinema_name: str, show_format: str
 ) -> Optional[ShowDate]:
+    """
+    Gets a showdate by movie title, cinema and format, filtered by showtime date.
+    :param showtime_date: Showtime date.
+    :param movie_tag: Movie title.
+    :param cinema_name: Cinema name.
+    :param show_format: Format of show.
+    :return: Showing showdate dataclass.
+    """
     showtime_date_name = showtime_date["ShowtimeDate"]
     showtime_movies = showtime_date["Movies"]
-    movie_showings = _get_movie_showings(showtime_movies, movie)
+    movie_showings = _get_movie_showings(
+        movie_list=showtime_movies, movie_tag=movie_tag
+    )
     if not movie_showings:
         return
     movie_title = movie_showings["Title"]
-    return ShowDate(
-        date=showtime_date_name,
-        cinemas=[
-            Cinema(
-                name=cinema_name,
-                movies=[
-                    Movie(
-                        title=movie_title,
-                        showtimes=_get_showtimes(movie_showings, format),
-                    )
-                ],
-            )
-        ],
+    movies = Movie(
+        title=movie_title,
+        showtimes=_get_showtimes(
+            movie_showings=movie_showings, show_format=show_format
+        ),
     )
-
-
-def get_showing_by_cinema(
-    movie: str, cinema: str, format: str = None
-) -> List[ShowDate]:
-    zone = _get_zone_by_cinema(cinema)
-    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
-        _get_showings_response_by_zone(zone), cinema
-    )
-    cinema_name = cinema_showings["Name"]
-    cinema_dates = cinema_showings["Dates"]
-    total_showings = []
-    for showtime_date in cinema_dates:
-        showdate = _get_showdate_from_showtime_date(
-            showtime_date, movie, cinema_name, format
-        )
-        if showdate:
-            total_showings.append(showdate)
-    return total_showings
-
-
-def get_showing_by_zone(
-    movie: str, zone_name: str, format: str = None
-) -> List[ShowDate]:
-    zones, is_city = _get_zones(zone_name)
-    total_showings = []
-    for zone in zones:
-        zone_showings = _get_zone_showings(zone, zone_name, is_city)
-        for cinema_showings in zone_showings:
-            cinema_name = cinema_showings["Name"]
-            cinema_dates = cinema_showings["Dates"]
-            total_showings = []
-            for showtime_date in cinema_dates:
-                showdate = _get_showdate_from_showtime_date(
-                    showtime_date, movie, cinema_name, format
-                )
-                if showdate:
-                    total_showings.append(showdate)
-    return total_showings
+    cinema = Cinema(name=cinema_name, movies=[movies])
+    return ShowDate(date=showtime_date_name, cinemas=[cinema])
 
 
 def _get_movie_showtimes(
-    showtime_movies: List[Dict[str, Any]], format: str
+    showtime_movies: List[Dict[str, Any]], show_format: str
 ) -> List[Movie]:
+    """
+    Gets a formatted list of movie showings.
+    :param showtime_movies: Movies showtime data.
+    :param show_format: Format of show.
+    :return: List of movie showtimes.
+    """
     movies = []
     for movie_showings in showtime_movies:
         movie_title = movie_showings["Title"]
         movies.append(
-            Movie(title=movie_title, showtimes=_get_showtimes(movie_showings, format))
+            Movie(
+                title=movie_title,
+                showtimes=_get_showtimes(
+                    movie_showings=movie_showings, show_format=show_format
+                ),
+            )
         )
     return movies
 
 
-def get_cinema_showings(cinema: str, format: str) -> List[ShowDate]:
-    zone = _get_zone_by_cinema(cinema)
-    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
-        _get_showings_response_by_zone(zone), cinema
-    )
-    cinema_name = cinema_showings["Name"]
-    cinema_dates = cinema_showings["Dates"]
-    total_showings = []
-    for showtime_date in cinema_dates:
-        showtime_date_name = showtime_date["ShowtimeDate"]
-        movies = _get_movie_showtimes(showtime_date["Movies"], format)
-        total_showings.append(
-            ShowDate(
-                date=showtime_date_name,
-                cinemas=[Cinema(name=cinema_name, movies=movies)],
-            )
-        )
-    return total_showings
-
-
 def get_cinema_showings_by_zone(zone_name: str, format: str) -> List[ShowDate]:
-    zones, is_city = _get_zones(zone_name)
+    """
+
+    :param zone_name:
+    :param format:
+    :return:
+    """
+    zones, is_city = _get_zones_tags(zone_name=zone_name)
     total_showings = []
     for zone in zones:
-        zone_showings = _get_zone_showings(zone, zone_name, is_city)
+        zone_showings = _get_zone_showings(
+            zone_tag=zone, zone_name=zone_name, is_city=is_city
+        )
         for cinema_showings in zone_showings:
             cinema_name = cinema_showings["Name"]
             cinema_dates = cinema_showings["Dates"]
             for showtime_date in cinema_dates:
                 showtime_date_name = showtime_date["ShowtimeDate"]
-                movies = _get_movie_showtimes(showtime_date["Movies"], format)
+                movies = _get_movie_showtimes(
+                    showtime_movies=showtime_date["Movies"], show_format=format
+                )
                 total_showings.append(
                     ShowDate(
                         date=showtime_date_name,
@@ -382,47 +485,18 @@ def get_cinema_showings_by_zone(zone_name: str, format: str) -> List[ShowDate]:
     return total_showings
 
 
-def get_cinema_showings_by_date(cinema: str, date: str, format: str) -> ShowDate:
-    zone = _get_zone_by_cinema(cinema)
-    cinema_showings = get_cinema_by_cinemas_and_cinema_key(
-        _get_showings_response_by_zone(zone), cinema
-    )
-    cinema_name = cinema_showings["Name"]
-    showtime_date = _get_showtimes_by_date(cinema_showings, date.replace("-", " "))
-    showtime_date_name = showtime_date["ShowtimeDate"]
-    movies = _get_movie_showtimes(showtime_date["Movies"], format)
-    return ShowDate(
-        date=showtime_date_name, cinemas=([Cinema(name=cinema_name, movies=movies)])
-    )
-
-
-def get_cinema_showings_by_date_and_zone(
-    zone_name: str, date: str, format: str
-) -> List[ShowDate]:
-    zones, is_city = _get_zones(zone_name)
-    total_showings = []
-    for zone in zones:
-        zone_showings = _get_zone_showings(zone, zone_name, is_city)
-        for cinema_showing in zone_showings:
-            cinema_name = cinema_showing["Name"]
-            showtime_date = _get_showtimes_by_date(
-                cinema_showing, date.replace("-", " ")
-            )
-            showtime_date_name = showtime_date["ShowtimeDate"]
-            movies = _get_movie_showtimes(showtime_date["Movies"], format)
-            total_showings.append(
-                ShowDate(
-                    date=showtime_date_name,
-                    cinemas=([Cinema(name=cinema_name, movies=movies)]),
-                )
-            )
-    return total_showings
-
-
 def get_total(date: str, format: str) -> List[Cinema]:
+    """
+
+    :param date:
+    :param format:
+    :return:
+    """
     cinema_showtimes = []
     for zone in CINEMAS:
-        cinema_showtime = _get_formatted_showings_by_zone(date, zone, "", format)
+        cinema_showtime = _get_formatted_cinemas_showings_by_zone_tag(
+            movie_tag="", date=date, zone_tag=zone, show_format=format
+        )
         if not cinema_showtime:
             continue
         cinema_showtimes += cinema_showtime
