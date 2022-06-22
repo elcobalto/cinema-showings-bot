@@ -1,5 +1,5 @@
 from difflib import SequenceMatcher
-from typing import List, Optional, Tuple, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
 
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.cinema.services import cinehoyts as cinehoyts_services
@@ -13,14 +13,14 @@ def get_chain(cinema: str) -> Optional[str]:
     :param cinema:
     :return:
     """
-    if cinehoyts_services.is_chain(cinema=cinema):
+    if cinehoyts_services.is_chain(cinema_tag=cinema):
         return "CINEHOYTS"
     elif cinemark_services.is_chain(cinema=cinema):
         return "CINEMARK"
     return None
 
 
-def get_showings(movie: str, date: str, cinema: str, format: str) -> ShowDate:
+def get_showings(movie: str, date: str, cinema: str, format: str) -> List[ShowDate]:
     """
 
     :param movie:
@@ -31,9 +31,13 @@ def get_showings(movie: str, date: str, cinema: str, format: str) -> ShowDate:
     """
     chain = get_chain(cinema=cinema)
     if chain == "CINEHOYTS":
-        return cinehoyts_services.get_showings(movie=movie, date=date, cinema=cinema, format=format)
+        return cinehoyts_services.get_showings(
+            movie_tag=movie, date=date, cinema_tag=cinema, show_format=format
+        )
     elif chain == "CINEMARK":
-        return cinemark_services.get_showings(movie=movie, date=date, cinema_name=cinema, format=format)
+        return cinemark_services.get_showings(
+            movie_tag=movie, date=date, cinema_tag=cinema, format=format
+        )
 
 
 def get_showings_by_zone(movie: str, date: str, zone: str, format: str) -> ShowDate:
@@ -45,25 +49,12 @@ def get_showings_by_zone(movie: str, date: str, zone: str, format: str) -> ShowD
     :param format:
     :return:
     """
-    cinehoyts_cinemas = cinehoyts_services.get_showings_by_zone(
-        movie=movie, date=date, zone_name=zone, format=format
+    cinehoyts_cinemas = cinehoyts_services.get_cinemas_showings_by_zone(
+        movie_tag=movie, date=date, zone_name=zone, show_format=format
     )
     cinemark_cinemas = cinemark_services.get_showings_by_zone(
         movie=movie, date=date, zone_name=zone, format=format
     )
-    return ShowDate(date=date, cinemas=cinehoyts_cinemas + cinemark_cinemas)
-
-
-def get_showing_by_date(movie: str, date: str, format: str) -> ShowDate:
-    """
-
-    :param movie:
-    :param date:
-    :param format:
-    :return:
-    """
-    cinehoyts_cinemas = cinehoyts_services.get_showing_by_date(movie=movie, date=date, format=format)
-    cinemark_cinemas = cinemark_services.get_showing_by_date(movie=movie, date=date, format=format)
     return ShowDate(date=date, cinemas=cinehoyts_cinemas + cinemark_cinemas)
 
 
@@ -79,136 +70,20 @@ def get_general_showings(
     :return:
     """
     cinema_is_zone = cinema in CINEMAS_ZONES
-    if cinema and not cinema_is_zone:
-        cinema_showings = get_showings(movie=movie, date=date, cinema=cinema, format=format)
-        message, total = get_movie_date_message(showdates=[cinema_showings], separator_type="CINEMA")
-    elif cinema and cinema_is_zone:
-        cinema_showings = get_showings_by_zone(movie=movie, date=date, zone=cinema, format=format)
-        message, total = get_movie_date_message(showdates=[cinema_showings], separator_type="CINEMA")
-    else:
-        cinema_showings = get_showing_by_date(movie=movie, date=date, format=format)
-        message, total = get_movie_date_message(showdates=[cinema_showings], separator_type="CINEMA")
-    return message, total
-
-
-def get_showing_by_cinema(movie: str, cinema: str, format: str) -> List[ShowDate]:
-    """
-
-    :param movie:
-    :param cinema:
-    :param format:
-    :return:
-    """
-    cinema_is_zone = cinema in CINEMAS_ZONES
     if not cinema_is_zone:
-        chain = get_chain(cinema=cinema)
-        if chain == "CINEHOYTS":
-            return cinehoyts_services.get_showing_by_cinema(movie=movie, cinema=cinema, format=format)
-        elif chain == "CINEMARK":
-            return cinemark_services.get_showing_by_cinema(
-                movie=movie, cinema=cinemark_services.get_cinema_by_cinema_tag(cinema_tag=cinema), format=format
-            )
-        else:
-            cinehoyts_showings = cinehoyts_services.get_showing_by_cinema(
-                movie=movie, cinema=cinema, format=format
-            )
-            cinemark_showings = cinemark_services.get_showing_by_cinema(
-                movie=movie, cinema=cinemark_services.get_cinema_by_cinema_tag(cinema_tag=cinema), format=format
-            )
-            return cinehoyts_showings + cinemark_showings
-    cinehoyts_showings = cinehoyts_services.get_showing_by_zone(
-        movie=movie, zone_name=cinema, format=format
-    )
-    cinemark_showings = cinemark_services.get_showing_by_zone(movie=movie, zone_name=cinema, format=format)
-    return cinehoyts_showings + cinemark_showings
-
-
-def get_cinema_showings_by_date(cinema: str, date: str, format: str) -> ShowDate:
-    """
-
-    :param cinema:
-    :param date:
-    :param format:
-    :return:
-    """
-    chain = get_chain(cinema=cinema)
-    if chain == "CINEHOYTS":
-        return cinehoyts_services.get_cinema_showings_by_date(cinema=cinema, date=date, format=format)
-    elif chain == "CINEMARK":
-        return cinemark_services.get_cinema_showings_by_date(cinema=cinemark_services.get_cinema_by_cinema_tag(cinema_tag=cinema), date=date, format=format)
-    cinehoyts_showdate = cinehoyts_services.get_cinema_showings_by_date(cinema=cinema, date=date, format=format)
-    cinemark_showdate = cinemark_services.get_cinema_showings_by_date(cinema=cinemark_services.get_cinema_by_cinema_tag(cinema_tag=cinema), date=date, format=format)
-    return ShowDate(date=cinehoyts_showdate.date, cinemas=cinehoyts_showdate.cinemas+cinemark_showdate.cinemas)
-
-def get_cinema_showings_by_date_and_zone(cinema: str, date: str, format: str) -> List[ShowDate]:
-    """
-
-    :param cinema:
-    :param date:
-    :param format:
-    :return:
-    """
-    cinehoyts_showings = cinehoyts_services.get_cinema_showings_by_date_and_zone(
-        zone_name=cinema, date=date, format=format
-    )
-    cinemark_showings = cinemark_services.get_cinema_showings_by_date_and_zone(
-        zone_name=cinema, date=date, format=format
-    )
-    return cinehoyts_showings + cinemark_showings
-
-
-def get_cinema_showings(cinema: str, format: str) -> List[ShowDate]:
-    """
-
-    :param cinema:
-    :param format:
-    :return:
-    """
-    chain = get_chain(cinema=cinema)
-    if chain == "CINEHOYTS":
-        return cinehoyts_services.get_cinema_showings(cinema=cinema, format=format)
-    elif chain == "CINEMARK":
-        return cinemark_services.get_cinema_showings(cinema=cinemark_services.get_cinema_by_cinema_tag(cinema_tag=cinema), format=format)
-    cinehoyts_showings = cinehoyts_services.get_cinema_showings(cinema=cinema, format=format)
-    cinemark_showings = cinemark_services.get_cinema_showings(cinema=cinemark_services.get_cinema_by_cinema_tag(cinema_tag=cinema), format=format)
-    return cinehoyts_showings + cinemark_showings
-
-
-def get_cinema_showings_by_zone(zone_name:str, format:  str) -> List[ShowDate]:
-    """
-
-    :param zone_name:
-    :param format:
-    :return:
-    """
-    cinehoyts_showings = cinehoyts_services.get_cinema_showings_by_zone(zone_name=zone_name, format=format)
-    cinemark_showings = cinemark_services.get_cinema_showings_by_zone(zone_name=zone_name, format=format)
-    return cinehoyts_showings + cinemark_showings
-
-
-def get_general_cinema_showings(
-    cinema: str, date: str = None, format: str = None
-) -> Tuple[str, int]:
-    """
-
-    :param cinema:
-    :param date:
-    :param format:
-    :return:
-    """
-    cinema_is_zone = cinema in CINEMAS_ZONES
-    if not cinema_is_zone and date:
-        cinema_showings = get_cinema_showings_by_date(cinema=cinema, date=date, format=format)
-        message, total = get_movie_date_message(showdates=[cinema_showings], separator_type="CINEMA")
-    elif not cinema_is_zone and not date:
-        cinema_showings = get_cinema_showings(cinema=cinema, format=format)
-        message, total = get_movie_date_message(showdates=cinema_showings, separator_type="CINEMA")
-    elif cinema_is_zone and date:
-        cinema_showings = get_cinema_showings_by_date_and_zone(cinema=cinema, date=date, format=format)
-        message, total = get_movie_date_message(showdates=cinema_showings, separator_type="CINEMA")
+        cinema_showings = get_showings(
+            movie=movie, date=date, cinema=cinema, format=format
+        )
+        message, total = get_movie_date_message(
+            showdates=cinema_showings, separator_type="CINEMA"
+        )
     else:
-        cinema_showings = get_cinema_showings_by_zone(zone_name=cinema, format=format)
-        message, total = get_movie_date_message(showdates=cinema_showings, separator_type="CINEMA")
+        cinema_showings = get_showings_by_zone(
+            movie=movie, date=date, zone=cinema, format=format
+        )
+        message, total = get_movie_date_message(
+            showdates=cinema_showings, separator_type="CINEMA"
+        )
     return message, total
 
 
@@ -239,10 +114,18 @@ def get_movie_date_message(
                     is_there_any_movie = True
                     is_there_showtime = True
                     if showtime.seats:
-                        seats = f"{showtime.seats} asientos disponibles" if int(showtime.seats) > 0 else 'AGOTADA'
-                        show_temp_result += f"{showtime.showtime} hrs — {showtime.format} — {seats}\n"
+                        seats = (
+                            f"{showtime.seats} asientos disponibles"
+                            if int(showtime.seats) > 0
+                            else "AGOTADA"
+                        )
+                        show_temp_result += (
+                            f"{showtime.showtime} hrs — {showtime.format} — {seats}\n"
+                        )
                     else:
-                        show_temp_result += f"{showtime.showtime} hrs — {showtime.format}\n"
+                        show_temp_result += (
+                            f"{showtime.showtime} hrs — {showtime.format}\n"
+                        )
                     total_shotimes += 1
                 show_temp_result += "——————\n\n"
                 if separator_type == "MOVIE":
@@ -298,7 +181,9 @@ def _get_movie_total(cinemas: List[Cinema]) -> str:
     for cinema in cinemas:
         for movie in cinema.movies:
             movie_title = movie.title.upper().replace("-", " ").replace(":", "")
-            movie_exists, movie_key = _check_movie_in_total(movie_title=movie_title, total=total)
+            movie_exists, movie_key = _check_movie_in_total(
+                movie_title=movie_title, total=total
+            )
             if movie_exists:
                 total[movie_key] += len(movie.showtimes)
             else:

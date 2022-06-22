@@ -33,14 +33,9 @@ def main():
         movie = None if movie in ("skip", "sk", "sp") else movie
         date = None if date in ("skip", "sk", "sp") else date
         cinema = None if cinema in ("skip", "sk", "sp") else cinema
-        if not movie and date and cinema:
-            message, total = get_general_cinema_showings(cinema=cinema, date=date, format=format)
-        elif movie and not date and cinema:
-            message, total = get_movie_date_message(
-                showdates=get_showing_by_cinema(movie=movie, cinema=cinema, format=format), separator_type="CINEMA"
-            )
-        else:
-            message, total = get_general_showings(movie=movie, date=date, cinema=cinema, format=format)
+        message, total = get_general_showings(
+            movie=movie, date=date, cinema=cinema, format=format
+        )
         message = f"{total} HORARIOS EN TOTAL \n——————\n{message}"
         for cinema_showing_part in message.split("$SEPARATOR$"):
             if cinema_showing_part and cinema_showing_part not in ("\n", "\n\n"):
