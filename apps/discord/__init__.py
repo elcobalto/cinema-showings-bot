@@ -182,7 +182,7 @@ def _check_movie_in_total(movie_title, total):
         if (
             (movie_title in possible_movie)
             or (possible_movie in movie_title)
-            or similarity > 0.6
+            or similarity > 0.66
         ):
             return True, possible_movie
     return False, movie_title
