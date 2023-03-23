@@ -198,7 +198,7 @@ def _check_movie_in_total(movie_title, total):
         ).replace(",", "").replace(".", "").replace(":", "")
         similarity = similar(movie_title, possible_movie)
         if (
-            (len(movie_title) >= 5 or len(possible_movie) >= 5)
+            (len(movie_title) >= 5 and len(possible_movie) >= 5)
             and ((movie_title in possible_movie) or (possible_movie in movie_title))
         ) or similarity > 0.66:
             return True, possible_movie
