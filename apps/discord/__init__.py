@@ -197,10 +197,16 @@ def _check_movie_in_total(movie_title, total):
             "?", ""
         ).replace(",", "").replace(".", "").replace(":", "")
         similarity = similar(movie_title, possible_movie)
+        minimum_title_len = min(len(movie_title), len(possible_movie))
+        first_similarity = similar(movie_title[:minimum_title_len], possible_movie[:minimum_title_len])
+        last_similarity = similar(movie_title[-minimum_title_len:], possible_movie[-minimum_title_len:])
+
         if (
             (len(movie_title) >= 5 and len(possible_movie) >= 5)
             and ((movie_title in possible_movie) or (possible_movie in movie_title))
-        ) or similarity > 0.66:
+        ) or (
+            similarity > 0.66 or first_similarity > 0.85 or last_similarity > 0.85
+        ):
             return True, possible_movie
     return False, movie_title
 
