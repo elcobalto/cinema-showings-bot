@@ -136,7 +136,9 @@ def _get_showtimes(movie_showings: Dict, format: str = None) -> List[ShowTime]:
             continue
         for show in showtimes:
             showtime = show["Time"]
-            total_showtimes.append(ShowTime(showtime=showtime, format=format_name, seats=""))
+            total_showtimes.append(
+                ShowTime(showtime=showtime, format=format_name, seats="")
+            )
     return total_showtimes
 
 

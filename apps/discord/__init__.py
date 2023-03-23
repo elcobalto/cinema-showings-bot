@@ -62,7 +62,9 @@ def get_showing_by_cinema(movie: str, cinema: str, format: str) -> List[ShowDate
         if chain == "CINEHOYTS":
             return cinehoyts_services.get_showing_by_cinema(movie, cinema, format)
         elif chain == "CINEMARK":
-            return cinemark_services.get_showing_by_cinema(movie, cinemark_services.get_cinema_by_cinema_key(cinema), format)
+            return cinemark_services.get_showing_by_cinema(
+                movie, cinemark_services.get_cinema_by_cinema_key(cinema), format
+            )
         else:
             cinehoyts_showings = cinehoyts_services.get_showing_by_cinema(
                 movie, cinema, format
@@ -84,7 +86,9 @@ def get_cinema_showings_by_date(cinema, date, format) -> ShowDate:
     if chain == "CINEHOYTS":
         return cinehoyts_services.get_cinema_showings_by_date(cinema, date, format)
     elif chain == "CINEMARK":
-        return cinemark_services.get_cinema_showings_by_date(cinemark_services.get_cinema_by_cinema_key(cinema), date, format)
+        return cinemark_services.get_cinema_showings_by_date(
+            cinemark_services.get_cinema_by_cinema_key(cinema), date, format
+        )
 
 
 def get_cinema_showings_by_date_and_zone(cinema, date, format) -> List[ShowDate]:
@@ -151,10 +155,18 @@ def get_movie_date_message(
                     is_there_any_movie = True
                     is_there_showtime = True
                     if showtime.seats:
-                        seats = f"{showtime.seats} asientos disponibles" if int(showtime.seats) > 0 else 'AGOTADA'
-                        show_temp_result += f"{showtime.showtime} hrs — {showtime.format} — {seats}\n"
+                        seats = (
+                            f"{showtime.seats} asientos disponibles"
+                            if int(showtime.seats) > 0
+                            else "AGOTADA"
+                        )
+                        show_temp_result += (
+                            f"{showtime.showtime} hrs — {showtime.format} — {seats}\n"
+                        )
                     else:
-                        show_temp_result += f"{showtime.showtime} hrs — {showtime.format}\n"
+                        show_temp_result += (
+                            f"{showtime.showtime} hrs — {showtime.format}\n"
+                        )
                     total_shotimes += 1
                 show_temp_result += "——————\n\n"
                 if separator_type == "MOVIE":
@@ -177,13 +189,18 @@ def similar(a, b):
 
 
 def _check_movie_in_total(movie_title, total):
+    movie_title.replace("¡", "").replace("!", "").replace("¿", "").replace(
+        "?", ""
+    ).replace(",", "").replace(".", "").replace(":", "")
     for possible_movie in total.keys():
+        possible_movie.replace("¡", "").replace("!", "").replace("¿", "").replace(
+            "?", ""
+        ).replace(",", "").replace(".", "").replace(":", "")
         similarity = similar(movie_title, possible_movie)
         if (
-            (movie_title in possible_movie)
-            or (possible_movie in movie_title)
-            or similarity > 0.66
-        ):
+            (len(movie_title) >= 5 or len(possible_movie) >= 5)
+            and ((movie_title in possible_movie) or (possible_movie in movie_title))
+        ) or similarity > 0.66:
             return True, possible_movie
     return False, movie_title
 
