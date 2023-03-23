@@ -2,16 +2,15 @@
 import os
 
 from discord.ext import commands
+from discord import Intents
 
 from apps.discord import (
     get_cinema_total,
     get_format_total,
-    get_general_cinema_showings,
     get_general_showings,
     get_info_cinemas,
     get_info_cities,
     get_movie_date_message,
-    get_showing_by_cinema,
     get_total,
 )
 from cinema_showings_bot.settings import COMMAND
@@ -20,7 +19,8 @@ from cinema_showings_bot.settings import COMMAND
 def main():
     TOKEN = os.getenv("DISCORD_TOKEN", "")
 
-    client = commands.Bot(command_prefix=COMMAND)
+    intents = Intents.all()
+    client = commands.Bot(command_prefix="$t.", intents=intents)
 
     @client.event
     async def on_ready():
@@ -30,9 +30,10 @@ def main():
     async def horarios(
         ctx, movie: str, date: str, cinema: str = None, format: str = None
     ):
-        movie = None if movie in ("skip", "sk", "sp") else movie
-        date = None if date in ("skip", "sk", "sp") else date
-        cinema = None if cinema in ("skip", "sk", "sp") else cinema
+        movie = None if movie in ("skip", "sk", "sp") else movie.lower()
+        date = None if date in ("skip", "sk", "sp") else date.lower()
+        cinema = None if cinema in ("skip", "sk", "sp") else cinema.lower()
+        format = None if not format else format.upper()
         message, total = get_general_showings(
             movie=movie, date=date, cinema=cinema, format=format
         )

@@ -1,0 +1,447 @@
+{
+    "Movies": [{
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67352",
+                "TimeFilter": "/Date(1678041000000)/",
+                "Time": "12:30",
+                "ShowtimeAMPM": "12:30 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67353",
+                "TimeFilter": "/Date(1678050900000)/",
+                "Time": "15:15",
+                "ShowtimeAMPM": "03:15 PM"
+            }],
+            "VistaId": "HO00007212",
+            "Name": "ESP",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "ESPA\u00d1OL"
+        }, {
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67354",
+                "TimeFilter": "/Date(1678062000000)/",
+                "Time": "18:20",
+                "ShowtimeAMPM": "06:20 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67355",
+                "TimeFilter": "/Date(1678072200000)/",
+                "Time": "21:10",
+                "ShowtimeAMPM": "09:10 PM"
+            }],
+            "VistaId": "HO00007193",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41616,
+        "Title": "ANT MAN AND THE WASP: QUANTUMANIA",
+        "Key": "ant-man-and-the-wasp-quantumania",
+        "OriginalTitle": "ANT MAN AND THE WASP: QUANTUMANIA",
+        "Rating": "TE+7",
+        "RatingDescription": "Todo espectador, inconveniente para menores de 7 a\u00f1os: Que contenga im\u00e1genes que pueda producir trastornos en el desarrollo de la personalidad infantil y producir confusi\u00f3n entre la realidad y la fantas\u00eda.",
+        "RunTime": "125",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41616/1/1/41616.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=AfXdaOd_Dxk",
+        "Director": "Peyton Reed",
+        "Actors": "Jonathan Majors",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67356",
+                "TimeFilter": "/Date(1678042800000)/",
+                "Time": "13:00",
+                "ShowtimeAMPM": "01:00 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67358",
+                "TimeFilter": "/Date(1678069800000)/",
+                "Time": "20:30",
+                "ShowtimeAMPM": "08:30 PM"
+            }],
+            "VistaId": "HO00007104",
+            "Name": "3D 48HFR SUB",
+            "IsExperience": true,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41031,
+        "Title": "AVATAR 2",
+        "Key": "avatar-2",
+        "OriginalTitle": "AVATAR 2",
+        "Rating": "14",
+        "RatingDescription": "Mayores de 14 a\u00f1os.",
+        "RunTime": "195",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41031/1/1/41031.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=96d3jsVWnOE",
+        "Director": "James Cameron",
+        "Actors": "",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67347",
+                "TimeFilter": "/Date(1678038300000)/",
+                "Time": "11:45",
+                "ShowtimeAMPM": "11:45 AM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67348",
+                "TimeFilter": "/Date(1678047600000)/",
+                "Time": "14:20",
+                "ShowtimeAMPM": "02:20 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67349",
+                "TimeFilter": "/Date(1678057200000)/",
+                "Time": "17:00",
+                "ShowtimeAMPM": "05:00 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67350",
+                "TimeFilter": "/Date(1678066800000)/",
+                "Time": "19:40",
+                "ShowtimeAMPM": "07:40 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67351",
+                "TimeFilter": "/Date(1678076100000)/",
+                "Time": "22:15",
+                "ShowtimeAMPM": "10:15 PM"
+            }],
+            "VistaId": "HO00007235",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41731,
+        "Title": "CREED 3",
+        "Key": "creed-3",
+        "OriginalTitle": "CREED 3",
+        "Rating": "14",
+        "RatingDescription": "Mayores de 14 a\u00f1os.",
+        "RunTime": "116",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41731/1/1/41731.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=jdEEZeRiyeQ&t=59s",
+        "Director": "Michael B.  Jordan",
+        "Actors": "Michael B.  Jordan",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67346",
+                "TimeFilter": "/Date(1678077000000)/",
+                "Time": "22:30",
+                "ShowtimeAMPM": "10:30 PM"
+            }],
+            "VistaId": "HO00007234",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41730,
+        "Title": "ELLAS HABLAN",
+        "Key": "ellas-hablan",
+        "OriginalTitle": "ELLAS HABLAN",
+        "Rating": "TE+7",
+        "RatingDescription": "Todo espectador, inconveniente para menores de 7 a\u00f1os: Que contenga im\u00e1genes que pueda producir trastornos en el desarrollo de la personalidad infantil y producir confusi\u00f3n entre la realidad y la fantas\u00eda.",
+        "RunTime": "104",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41730/1/1/41730.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=beOvyx4QFc0",
+        "Director": "Sara Polley",
+        "Actors": "Claire Fo",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67297",
+                "TimeFilter": "/Date(1678065300000)/",
+                "Time": "19:15",
+                "ShowtimeAMPM": "07:15 PM"
+            }],
+            "VistaId": "HO00006771",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 39389,
+        "Title": "ELVIS",
+        "Key": "elvis",
+        "OriginalTitle": "ELVIS",
+        "Rating": "TE",
+        "RatingDescription": "Todo Espectador.",
+        "RunTime": "159",
+        "Poster": "http://static.cinepolis.com/img/peliculas/39389/1/1/39389.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=184kYPLG3Uk",
+        "Director": " Baz  Luhrmann",
+        "Actors": "Austin Butler",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67344",
+                "TimeFilter": "/Date(1678046400000)/",
+                "Time": "14:00",
+                "ShowtimeAMPM": "02:00 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67345",
+                "TimeFilter": "/Date(1678056000000)/",
+                "Time": "16:40",
+                "ShowtimeAMPM": "04:40 PM"
+            }],
+            "VistaId": "HO00007070",
+            "Name": "ESP",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "ESPA\u00d1OL"
+        }],
+        "Id": 40865,
+        "Title": "GATO CON BOTAS: EL ULTIMO DESEO",
+        "Key": "gato-con-botas-el-ultimo-deseo",
+        "OriginalTitle": "GATO CON BOTAS: EL ULTIMO DESEO",
+        "Rating": "TE",
+        "RatingDescription": "Todo Espectador.",
+        "RunTime": "122",
+        "Poster": "http://static.cinepolis.com/img/peliculas/40865/1/1/40865.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=KpGcElMwfDo",
+        "Director": "Joel Crawford",
+        "Actors": "",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67359",
+                "TimeFilter": "/Date(1678035600000)/",
+                "Time": "11:00",
+                "ShowtimeAMPM": "11:00 AM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67360",
+                "TimeFilter": "/Date(1678045200000)/",
+                "Time": "13:40",
+                "ShowtimeAMPM": "01:40 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67361",
+                "TimeFilter": "/Date(1678054800000)/",
+                "Time": "16:20",
+                "ShowtimeAMPM": "04:20 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67362",
+                "TimeFilter": "/Date(1678064400000)/",
+                "Time": "19:00",
+                "ShowtimeAMPM": "07:00 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67363",
+                "TimeFilter": "/Date(1678074000000)/",
+                "Time": "21:40",
+                "ShowtimeAMPM": "09:40 PM"
+            }],
+            "VistaId": "HO00007196",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41434,
+        "Title": "LA BALLENA",
+        "Key": "la-ballena",
+        "OriginalTitle": "LA BALLENA",
+        "Rating": "14",
+        "RatingDescription": "Mayores de 14 a\u00f1os.",
+        "RunTime": "117",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41434/1/1/41434.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=qWladm3_BBA",
+        "Director": "Darren Aronofsky",
+        "Actors": "Brendan Fraser",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67343",
+                "TimeFilter": "/Date(1678037400000)/",
+                "Time": "11:30",
+                "ShowtimeAMPM": "11:30 AM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67340",
+                "TimeFilter": "/Date(1678052700000)/",
+                "Time": "15:45",
+                "ShowtimeAMPM": "03:45 PM"
+            }],
+            "VistaId": "HO00007195",
+            "Name": "ESP",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "ESPA\u00d1OL"
+        }],
+        "Id": 41431,
+        "Title": "LAS MOMIAS Y EL ANILLO PERDIDO",
+        "Key": "las-momias-y-el-anillo-perdido",
+        "OriginalTitle": "LAS MOMIAS Y EL ANILLO PERDIDO",
+        "Rating": "TE",
+        "RatingDescription": "Todo Espectador.",
+        "RunTime": "88",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41431/1/1/41431.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=eTUsFX-UobE",
+        "Director": "JJ. Garcia Galocha",
+        "Actors": "",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67341",
+                "TimeFilter": "/Date(1678060800000)/",
+                "Time": "18:00",
+                "ShowtimeAMPM": "06:00 PM"
+            }],
+            "VistaId": "HO00007160",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41352,
+        "Title": "LOS ESPIRITUS DE LA ISLA",
+        "Key": "los-espiritus-de-la-isla",
+        "OriginalTitle": "LOS ESPIRITUS DE LA ISLA",
+        "Rating": "14",
+        "RatingDescription": "Mayores de 14 a\u00f1os.",
+        "RunTime": "114",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41352/1/1/41352.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=d4_uRWkdLyQ",
+        "Director": "Martin Mcdonagh",
+        "Actors": "Colin Farrell",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67357",
+                "TimeFilter": "/Date(1678058100000)/",
+                "Time": "17:15",
+                "ShowtimeAMPM": "05:15 PM"
+            }],
+            "VistaId": "HO00007135",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41198,
+        "Title": "LOS FABELMANS",
+        "Key": "los-fabelmans",
+        "OriginalTitle": "LOS FABELMANS",
+        "Rating": "14",
+        "RatingDescription": "Mayores de 14 a\u00f1os.",
+        "RunTime": "120",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41198/1/1/41198.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=h30ohy-NTb4",
+        "Director": "Steven Spielberg",
+        "Actors": "Seth Rogen",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }, {
+        "Formats": [{
+            "Showtimes": [{
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67339",
+                "TimeFilter": "/Date(1678039800000)/",
+                "Time": "12:10",
+                "ShowtimeAMPM": "12:10 PM"
+            }, {
+                "CinemaId": 458,
+                "VistaCinemaId": "722",
+                "ShowtimeId": "67342",
+                "TimeFilter": "/Date(1678071000000)/",
+                "Time": "20:50",
+                "ShowtimeAMPM": "08:50 PM"
+            }],
+            "VistaId": "HO00007161",
+            "Name": "SUBT",
+            "IsExperience": false,
+            "SegobPermission": "",
+            "Language": "SUBTITULADA"
+        }],
+        "Id": 41351,
+        "Title": "TAR",
+        "Key": "tar",
+        "OriginalTitle": "TAR",
+        "Rating": "14",
+        "RatingDescription": "Mayores de 14 a\u00f1os.",
+        "RunTime": "156",
+        "Poster": "http://static.cinepolis.com/img/peliculas/41351/1/1/41351.jpg",
+        "Trailer": "https://www.youtube.com/watch?v=NmF9-W80uN0",
+        "Director": "Todd Field",
+        "Actors": "Cate Blanchett",
+        "Gender": "",
+        "Distributor": "",
+        "Order": 0
+    }],
+    "FilterDate": "/Date(1677996000000)/",
+    "ShowtimeDate": "05 marzo"
+}

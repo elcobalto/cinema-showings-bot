@@ -22,7 +22,7 @@ class ShowDate:
         return self.cinemas
 
     def get_formatted_date(self):
-        return self.date.replace("-", " ")
+        return self.date.replace("-", " ") if self.date else ""
 
     def add_cinemas(self, cinemas):
         self.cinemas += cinemas

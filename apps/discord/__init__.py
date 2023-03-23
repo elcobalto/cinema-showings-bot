@@ -31,16 +31,26 @@ def get_showings(movie: str, date: str, cinema: str, format: str) -> List[ShowDa
     """
     chain = get_chain(cinema=cinema)
     if chain == "CINEHOYTS":
+        if date:
+            return cinehoyts_services.get_showings(
+                movie_tag=movie, date=date, cinema_tag=cinema, show_format=format
+            )
         return cinehoyts_services.get_showings(
             movie_tag=movie, date=date, cinema_tag=cinema, show_format=format
         )
     elif chain == "CINEMARK":
+        if date:
+            return cinemark_services.get_showings(
+                movie_tag=movie, date=date, cinema_tag=cinema, format=format
+            )
         return cinemark_services.get_showings(
             movie_tag=movie, date=date, cinema_tag=cinema, format=format
         )
 
 
-def get_showings_by_zone(movie: str, date: str, zone: str, format: str) -> ShowDate:
+def get_showings_by_zone(
+    movie: str, date: str, zone: str, format: str
+) -> List[ShowDate]:
     """
 
     :param movie:
@@ -49,13 +59,13 @@ def get_showings_by_zone(movie: str, date: str, zone: str, format: str) -> ShowD
     :param format:
     :return:
     """
-    cinehoyts_cinemas = cinehoyts_services.get_cinemas_showings_by_zone(
+    cinehoyts_showings = cinehoyts_services.get_cinemas_showings_by_zone(
         movie_tag=movie, date=date, zone_name=zone, show_format=format
     )
-    cinemark_cinemas = cinemark_services.get_showings_by_zone(
+    cinemark_showings = cinemark_services.get_showings_by_zone(
         movie=movie, date=date, zone_name=zone, format=format
     )
-    return ShowDate(date=date, cinemas=cinehoyts_cinemas + cinemark_cinemas)
+    return cinehoyts_showings + cinemark_showings
 
 
 def get_general_showings(
@@ -74,16 +84,13 @@ def get_general_showings(
         cinema_showings = get_showings(
             movie=movie, date=date, cinema=cinema, format=format
         )
-        message, total = get_movie_date_message(
-            showdates=cinema_showings, separator_type="CINEMA"
-        )
     else:
         cinema_showings = get_showings_by_zone(
             movie=movie, date=date, zone=cinema, format=format
         )
-        message, total = get_movie_date_message(
-            showdates=cinema_showings, separator_type="CINEMA"
-        )
+    message, total = get_movie_date_message(
+        showdates=cinema_showings, separator_type="CINEMA"
+    )
     return message, total
 
 

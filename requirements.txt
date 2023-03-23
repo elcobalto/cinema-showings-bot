@@ -1,3 +1,5 @@
 discord.py
+ipdb
+parameterized
 python-dotenv
 requests

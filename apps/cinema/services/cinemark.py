@@ -131,11 +131,13 @@ def _get_movie_showtimes(
     """
     movie_formats = movie_showing["movie_versions"]
     showtimes = []
-    for show_format in movie_formats:
-        format_name = _format_show_format(show_format=show_format["title"])
+    for show_format_data in movie_formats:
+        show_format_title = show_format_data["title"]
+        show_format_sessions = show_format_data["sessions"]
+        format_name = _format_show_format(show_format=show_format_title)
         if show_format and show_format not in format_name:
             continue
-        for timeshow in show_format["sessions"]:
+        for timeshow in show_format_sessions:
             showtime = timeshow["hour"]
             showtimes.append(
                 ShowTime(
@@ -266,7 +268,7 @@ def _get_showings_by_cinema(
 
 def get_showings_by_cinema_tags(
     movie: str, date: str, cinemas: List[Dict[str, Any]], format: str
-):
+) -> List[ShowDate]:
     """
 
     :param movie:
@@ -277,15 +279,15 @@ def get_showings_by_cinema_tags(
     """
     cinemas_showdates = []
     for cinema in cinemas:
-        cinemas_showdates += _get_showings_by_cinema(
-            date=date, cinema=cinema, movie=movie, format=format
+        cinemas_showdates += get_showings(
+            movie_tag=movie, date=date, cinema_tag=cinema["name"], format=format
         )
     return cinemas_showdates
 
 
 def get_showings_by_zone(
     movie: str, date: str, zone_name: str, format: str
-) -> List[Cinema]:
+) -> List[ShowDate]:
     """
 
     :param movie:
