@@ -7,7 +7,7 @@ from apps.cinema.constants.cinemark import (
     CINEMA_ZONES_TAGS,
     CINEMAS_TAGS,
     TOTAL_CINEMAS_TAGS,
-CINEMA_MACROZONES,
+    CINEMA_MACROZONES,
 )
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.movie.dataclasses import Movie, ShowTime
@@ -99,7 +99,13 @@ def _get_movie_showtimes(
             continue
         for timeshow in show_format["sessions"]:
             showtime = timeshow["hour"]
-            showtimes.append(ShowTime(showtime=showtime[:-3], format=format_name, seats=timeshow['seats_available']))
+            showtimes.append(
+                ShowTime(
+                    showtime=showtime[:-3],
+                    format=format_name,
+                    seats=timeshow["seats_available"],
+                )
+            )
     return Movie(title=movie_title, showtimes=showtimes)
 
 
@@ -176,7 +182,7 @@ def get_showings_by_zone(movie: str, date: str, zone: str, format: str) -> List[
 def get_showing_by_date(movie: str, date: str, format: str) -> List[Cinema]:
     cinemas = []
     for cinema_macrozone in CINEMA_MACROZONES:
-        cinemas += cinema_macrozone['list']
+        cinemas += cinema_macrozone["list"]
     return get_showings_by_cinema_tags(movie, date, cinemas, format)
 
 

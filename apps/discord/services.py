@@ -30,9 +30,12 @@ def main():
     async def horarios(
         ctx, movie: str, date: str, cinema: str = None, format: str = None
     ):
-        movie = None if movie in ("skip", "sk", "sp") else movie
-        date = None if date in ("skip", "sk", "sp") else date
-        cinema = None if cinema in ("skip", "sk", "sp") else cinema
+        movie = None if not movie or movie in ("skip", "sk", "sp") else movie.lower()
+        date = None if not date or date in ("skip", "sk", "sp") else date.lower()
+        cinema = (
+            None if not cinema or cinema in ("skip", "sk", "sp") else cinema.lower()
+        )
+        format = None if not format else format.upper()
         if not movie and date and cinema:
             message, total = get_general_cinema_showings(cinema, date, format)
         elif movie and not date and cinema:
