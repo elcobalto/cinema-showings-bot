@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps import Cinema
+from apps.cinema.models import Cinema
 
 
 class Showing(models.Model):
