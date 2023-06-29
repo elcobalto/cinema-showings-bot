@@ -1,6 +1,7 @@
 # bot.py
 import os
 
+from discord import Intents
 from discord.ext import commands
 
 from apps.discord import (
@@ -20,7 +21,8 @@ from cinema_showings_bot.settings import COMMAND
 def main():
     TOKEN = os.getenv("DISCORD_TOKEN", "")
 
-    client = commands.Bot(command_prefix=COMMAND)
+    intents = Intents.all()
+    client = commands.Bot(command_prefix=COMMAND, intents=intents)
 
     @client.event
     async def on_ready():
