@@ -17,7 +17,7 @@ from apps.cinema.constants.cinehoyts import (
 from apps.cinema.dataclasses import Cinema, ShowDate
 from apps.movie.dataclasses import Movie, ShowTime
 
-CINEHOYTS_HOST = "https://cinehoyts.cl"
+CINEHOYTS_HOST = "https://cinepolischile.cl"
 
 
 def _get_cinemas_from_zone(zone_name: str) -> List[str]:
