@@ -52,7 +52,7 @@ def _get_showings_response_by_zone(
     zone: str = "santiago-oriente",
 ) -> List[Dict[str, Any]]:
     try:
-        payload = {"claveCiudad": zone, "esVIP": True}
+        payload = {"claveCiudad": zone, "esVIP": False}
         showings = requests.post(
             f"{CINEHOYTS_HOST}/Cartelera.aspx/GetNowPlayingByCity", json=payload
         )
