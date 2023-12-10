@@ -56,6 +56,7 @@ def _get_showings_response_by_zone(
         showings = requests.post(
             f"{CINEHOYTS_HOST}/Cartelera.aspx/GetNowPlayingByCity", json=payload
         )
+        print(f"CINEHOYTS RESPONSE: {showings}")
         clean_showings = showings.json()
         return clean_showings["d"]["Cinemas"]
     except Exception:
